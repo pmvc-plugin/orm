@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cmd="bash"
+
+if [ $# -ne 0 ]; then
+  cmd='bash -c "'
+  cmd+="$*"
+  cmd+='"'
+fi
+
+echo $cmd
+
+docker-compose exec php $cmd 

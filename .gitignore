@@ -1,0 +1,10 @@
+vendor
+composer.lock
+.php_cs.cache
+.phpunit.result.cache
+.*.sw?
+dev
+demos/migrations
+test.sqlite
+src/_test*
+*.json

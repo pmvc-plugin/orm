@@ -1,0 +1,30 @@
+{
+  "name": "pmvc-plugin/orm",
+  "description": "About ...",
+  "type": "library",
+  "homepage": "https://github.com/pmvc/pmvc",
+  "keywords": ["orm", "pmvc", "plug-in"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Hill",
+      "email": "hill@kimo.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PMVC\\PlugIn\\orm\\": "./src"
+    }
+  },
+  "require": {
+    "pmvc/pmvc": "*",
+    "pmvc-plugin/guid": "*"
+  },
+  "require-dev": {
+    "lulco/phoenix": "*",
+    "ezsql/ezsql": "*",
+    "pmvc-plugin/unit": "*",
+    "pmvc-plugin/dev": "*"
+  },
+  "minimum-stability": "dev"
+}
