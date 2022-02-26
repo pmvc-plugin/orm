@@ -12,7 +12,7 @@ $orm = \PMVC\plug('orm', [
     ]
   ]
 ]);
-const migrationFolder = __DIR__.'/../dev/migrations'; 
+const migrationFolder = __DIR__.'/migrations'; 
 // $res = $orm->schema()->diffFromModelToMigration(['../dev/models/Profile.php'], migrationFolder);
 $orm->setEngine();
 $orm->migration(migrationFolder);

@@ -14,7 +14,7 @@ class Migration
             $r = \PMVC\l($f, _INIT_CONFIG);
             $class = \PMVC\getExportClass($r); 
             $obj = new $class();
-            $obj->up($oDao);
+            $obj->operations($oDao);
         }
     }
 }

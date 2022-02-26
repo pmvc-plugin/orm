@@ -14,13 +14,8 @@ class Migration implements MigrationInterface
 [MIGRATION_DEP]
     }
 
-    public function up(DAO $dao)
+    public function operations(DAO $dao)
     {
-[MIGRATION_UP]
-    }
-
-    public function down(DAO $dao)
-    {
-[MIGRATION_DOWN]
+[MIGRATION_OP]
     }
 }

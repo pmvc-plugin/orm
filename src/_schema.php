@@ -54,8 +54,7 @@ Class Schema {
             $this->buildMigration([
               'MIGRATION_NAME' => '0001',
               'MIGRATION_DEP' => '',
-              'MIGRATION_UP' => $upCommand,
-              'MIGRATION_DOWN'=> '',
+              'MIGRATION_OP' => $upCommand,
             ], $migrationFolder);
         }
     }
