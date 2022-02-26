@@ -11,6 +11,10 @@ const SQLITE = 'sqlite';
 const MYSQL = 'mysql';
 const PGSQL = 'pgsql';
 
+const DATABASES = 'databases';
+const DEFAULT_KEY = 'default';
+const TYPE = 'type';
+
 class orm extends PlugIn
 {
     private $_engine;
@@ -20,22 +24,26 @@ class orm extends PlugIn
         $this->_engine = new Engine();
     }
 
-    public function setEngine($engineName)
+    public function setEngine($databaseId = DEFAULT_KEY)
     {
-        switch ($engineName) {
+        $configs = \PMVC\value($this, [DATABASES, $databaseId]);
+        $type = \PMVC\get($configs, TYPE);
+        switch ($type) {
             case SQLITE:
-              $this->_engine = $this->engine_sqlite();
-              break;
+                $this->_engine = $this->engine_sqlite($configs);
+                break;
             case MYSQL:
-              $this->_engine = $this->engine_mysql();
-              break;
+                $this->_engine = $this->engine_mysql($configs);
+                break;
             case PGSQL:
-              $this->_engine = $this->engine_pgsql();
-              break;
-            default;
-              $this->_engine = new Engine();
-              break;
+                $this->_engine = $this->engine_pgsql($configs);
+                break;
+            default:
+                $this->_engine = new Engine($configs);
+                break;
         }
+        $dsn = $this->dsn()->buildDsn();
+        $this->pdo($dsn);
     }
 
     public function compile(array $behaviors, $engine = null)

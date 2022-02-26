@@ -3,9 +3,10 @@
 namespace PMVC\PlugIn\orm;
 
 use PMVC\PlugIn\orm\Interfaces\Behavior;
+use PMVC\Hashmap;
 use DomainException;
 
-class Engine {
+class Engine extends Hashmap {
     public function buildCreateTable(Behavior $behavior)
     {
         return $behavior->process();

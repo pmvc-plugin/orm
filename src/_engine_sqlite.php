@@ -9,14 +9,11 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . "\GetSqliteEngine";
 class GetSqliteEngine
 {
   private $_engine;
-  public function __invoke()
+  public function __invoke($configs)
   {
     if (is_null($this->_engine)) {
-      $this->_engine = new SqliteEngine();
+      $this->_engine = new SqliteEngine($configs);
     }
-    var_dump($this->caller->dsn()->buildDsn());
-    die("hihi" . PHP_EOL);
-    // $this->caller->pdo(SQLITE);
     return $this->_engine;
   }
 }
@@ -25,6 +22,7 @@ class SqliteEngine extends Engine
 {
   public function buildDsn(Behavior $behavior)
   {
+      return "sqlite:".$this["file"];
   }
 
   public function getAllDsnRequired()

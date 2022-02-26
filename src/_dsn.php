@@ -23,9 +23,10 @@ class DSN
 
     public function buildDsn()
     {
-        return $this->caller->compile([
+        $result =  $this->caller->compile([
             new BuildDsn($this)
         ]);
+        return \PMVC\get($result, 0);
     }
 }
 
