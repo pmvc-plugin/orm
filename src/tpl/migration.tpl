@@ -1,6 +1,6 @@
 <?php
 
-namespace PMVC\Migration\m[MIGRATION_NAME];
+namespace PMVC\Migration\Migration_[MIGRATION_NAME];
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Migration';
 
