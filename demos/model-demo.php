@@ -13,10 +13,11 @@ $orm = \PMVC\plug('orm', [
   ]
 ]);
 const migrationFolder = __DIR__.'/migrations'; 
-// $res = $orm->schema()->diffFromModelToMigration(['../dev/models/Profile.php'], migrationFolder);
-$orm->setEngine();
-$orm->migration(migrationFolder);
+//$res = $orm->schema()->diffFromModelToMigration(['../dev/models/'], migrationFolder);
+$res = $orm->schema()->fromMigrations([migrationFolder]);
+var_dump($res);
 
-$history = $orm->dao()->getDefault()->getQueue();
-
-\PMVC\d($history);
+//$orm->setEngine();
+//$orm->migration(migrationFolder);
+//$history = $orm->dao()->getDefault()->getQueue();
+//\PMVC\d($history);

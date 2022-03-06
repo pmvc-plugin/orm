@@ -5,6 +5,7 @@ namespace PMVC\PlugIn\orm;
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\GetDAO';
 
 use PMVC\PlugIn\orm\DAO;
+use PMVC\PlugIn\orm\StructureDAO;
 
 class GetDAO
 {
@@ -38,12 +39,3 @@ class GetDAO
 
 }
 
-class StructureDao extends DAO {
-    public function commit($sql, array $prepare = []) {
-
-    }
-
-    public function process() {
-
-    }
-}

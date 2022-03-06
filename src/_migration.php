@@ -10,11 +10,6 @@ class Migration
     {
         $files = glob($dir.'/[0-9]*.php');
         $oDao = $this->caller->dao()->getDefault();
-        foreach ($files as $f) {
-            $r = \PMVC\l($f, _INIT_CONFIG);
-            $class = \PMVC\getExportClass($r); 
-            $obj = new $class();
-            $obj->operations($oDao);
-        }
+        $this->caller->process_migration($files, $oDao);
     }
 }

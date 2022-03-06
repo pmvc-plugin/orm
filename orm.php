@@ -46,7 +46,7 @@ class orm extends PlugIn
         $this->pdo($dsn);
     }
 
-    public function compile(array $behaviors, $engine = null)
+    public function compile(array $behaviors, Engine $engine = null)
     {
         if (is_null($engine)) {
             $engine = $this->_engine;

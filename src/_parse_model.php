@@ -18,18 +18,18 @@ class ParseModel {
         $table = \PMVC\value($attrs, ['obj', self::table, 0]);
         $fields = \PMVC\value($attrs, ['obj', self::field], []); 
         $cols = \PMVC\value($attrs, ['obj', self::column], []); 
-        $all = [];
+        $allColumns = [];
         $fieldMap = [];
         $colMap = [];
         foreach ($fields as $field) {
-          $all[$field->name] = $field;
+          $allColumns[$field->name] = $field;
           $fieldMap[$field->name] = $field;
         }
         foreach ($cols as $col) {
-          $all[$col->name] = $col;
+          $allColumns[$col->name] = $col;
           $colMap[$col->name] = $col;
         }
-        return compact('table', 'fieldMap', 'colMap', 'all');
+        return compact('table', 'fieldMap', 'colMap', 'allColumns');
     }
 }
 

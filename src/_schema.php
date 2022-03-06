@@ -4,7 +4,8 @@ namespace PMVC\PlugIn\orm;
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Schema';
 
-Class Schema {
+class Schema
+{
     public function __invoke()
     {
         return $this;
@@ -13,8 +14,14 @@ Class Schema {
     public function fromModels($modelFiles)
     {
         $schemaMap = [];
+        $modelFiles = $this->caller->get_all_files($modelFiles);
         foreach ($modelFiles as $mFile) {
-            extract(\PMVC\assign(['table', 'all'], \PMVC\passByRef($this->caller->parse_model($mFile))));
+            extract(
+                \PMVC\assign(
+                    ['table', 'allColumns'],
+                    \PMVC\passByRef($this->caller->parse_model($mFile))
+                )
+            );
             foreach ($all as $col) {
                 $table->addColumn($col);
             }
@@ -23,14 +30,19 @@ Class Schema {
         return $schemaMap;
     }
 
-    public function fromMigrations()
+    public function fromMigrations($migrationFiles)
     {
-
+        $migrationFiles = $this->caller->get_all_files(
+            $migrationFiles,
+            '[0-9]*.php'
+        );
+        $oDao = $this->caller->dao()->getDao('structure');
+        $this->caller->process_migration($migrationFiles, $oDao);
+        return $oDao->toArray();
     }
 
     public function fromDb()
     {
-
     }
 
     public function buildMigration($payload, $migrationFolder)
@@ -38,11 +50,10 @@ Class Schema {
         $pOrm = \PMVC\plug('orm');
         $migrationFolder = \PMVC\realpath($migrationFolder);
         if (!empty($migrationFolder)) {
-            $file = $migrationFolder. '/0001_initial.php'; 
-            $content = $pOrm->useTpl('migration', $payload); 
+            $file = $migrationFolder . '/0001_initial.php';
+            $content = $pOrm->useTpl('migration', $payload);
             file_put_contents($file, $content);
         }
-
     }
 
     public function diffFromModelToMigration($modelFiles, $migrationFolder = '')
@@ -50,12 +61,17 @@ Class Schema {
         $modelSchema = $this->fromModels($modelFiles);
         $pOrm = \PMVC\plug('orm');
         foreach ($modelSchema as $model) {
-            $upCommand = $pOrm->build_migration()->buildCreateModel($model->toArray());
-            $this->buildMigration([
-              'MIGRATION_NAME' => '0001',
-              'MIGRATION_DEP' => '',
-              'MIGRATION_OP' => $upCommand,
-            ], $migrationFolder);
+            $upCommand = $pOrm
+                ->build_migration()
+                ->buildCreateModel($model->toArray());
+            $this->buildMigration(
+                [
+                    'MIGRATION_NAME' => '0001',
+                    'MIGRATION_DEP' => '',
+                    'MIGRATION_OP' => $upCommand,
+                ],
+                $migrationFolder
+            );
         }
     }
 
