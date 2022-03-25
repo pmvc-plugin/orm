@@ -3,13 +3,17 @@
 namespace PMVC\PlugIn\orm;
 
 use PMVC\PlugIn\orm\Attrs\Table;
+use PMVC\PlugIn\orm\Tables;
 
 class StructureDAO extends DAO
 {
-    private $_tables = [];
+    private $_tables = null;
 
     public function createModel($tableName)
     {
+        if (is_null($this->_tables)) {
+            $this->_tables = new Tables();
+        }
         if (empty($this->_tables[$tableName])) {
             $this->_tables[$tableName] = new Table($tableName, $this);
         }
@@ -18,11 +22,7 @@ class StructureDAO extends DAO
 
     public function toArray()
     {
-        $arr = [];
-        foreach ($this->_tables as $tKey => $tVal) {
-            $arr[$tKey] = $tVal->toArray();
-        }
-        return $arr;
+        return $this->_tables->toArray();
     }
 
     public function commit($sql, array $prepare = [])

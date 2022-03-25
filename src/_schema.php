@@ -13,7 +13,7 @@ class Schema
 
     public function fromModels($modelFiles)
     {
-        $schemaMap = [];
+        $schemaMap = new Tables();
         $modelFiles = $this->caller->get_all_files($modelFiles);
         foreach ($modelFiles as $mFile) {
             extract(
@@ -22,12 +22,12 @@ class Schema
                     \PMVC\passByRef($this->caller->parse_model($mFile))
                 )
             );
-            foreach ($all as $col) {
+            foreach ($allColumns as $col) {
                 $table->addColumn($col);
             }
             $schemaMap[$table['TABLE_NAME']] = $table;
         }
-        return $schemaMap;
+        return $schemaMap->toArray();
     }
 
     public function fromMigrations($migrationFiles)
@@ -59,6 +59,9 @@ class Schema
     public function diffFromModelToMigration($modelFiles, $migrationFolder = '')
     {
         $modelSchema = $this->fromModels($modelFiles);
+        $migrationSchema = $this->fromMigrations([$migrationFolder]);
+        $tableDiff = $this->caller->diff()->diffAll($modelSchema, $migrationSchema);
+        return;
         $pOrm = \PMVC\plug('orm');
         foreach ($modelSchema as $model) {
             $upCommand = $pOrm

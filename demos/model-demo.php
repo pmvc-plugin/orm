@@ -14,8 +14,9 @@ $orm = \PMVC\plug('orm', [
 ]);
 const migrationFolder = __DIR__.'/migrations'; 
 //$res = $orm->schema()->diffFromModelToMigration(['../dev/models/'], migrationFolder);
-$res = $orm->schema()->fromMigrations([migrationFolder]);
-var_dump($res);
+//$res = $orm->schema()->fromMigrations([migrationFolder]);
+$res = $orm->schema()->diffFromModelToMigration(__DIR__.'/models/', migrationFolder);
+// var_dump($res);
 
 //$orm->setEngine();
 //$orm->migration(migrationFolder);

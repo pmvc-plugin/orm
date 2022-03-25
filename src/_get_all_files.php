@@ -9,6 +9,9 @@ class GetAllFiles
     public function __invoke($payload, $filePattern = '*.php')
     {
         $files = [];
+        if (!is_array($payload)) {
+            $payload = [$payload];
+        }
         foreach ($payload as $p) {
             if (is_dir($p)) {
                 $gFiles = glob(\PMVC\lastSlash($p) . $filePattern);
