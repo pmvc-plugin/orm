@@ -45,7 +45,7 @@ class Schema
     {
     }
 
-    public function buildMigration($payload, $migrationFolder)
+    public function writeMigration($payload, $migrationFolder)
     {
         $pOrm = \PMVC\plug('orm');
         $migrationFolder = \PMVC\realpath($migrationFolder);
@@ -61,13 +61,27 @@ class Schema
         $modelSchema = $this->fromModels($modelFiles);
         $migrationSchema = $this->fromMigrations([$migrationFolder]);
         $tableDiff = $this->caller->diff()->diffAll($modelSchema, $migrationSchema);
-        return;
-        $pOrm = \PMVC\plug('orm');
+        $pOrm = $this->caller;
+        $newTables = \PMVC\value($tableDiff, ['tables', 'diff', 'left']);
+        $delTables = \PMVC\value($tableDiff, ['tables', 'diff', 'right']);
+        $colDiffs = \PMVC\get($tableDiff, 'columns');
+        $commands = [];
+        foreach ($newTables as $tb) {
+            $commands[] = $pOrm
+                ->build_migration()
+                ->buildCreateModel($tb);
+        }
+        foreach ($colDiffs as $tableName => $diffVal) {
+            \PMVC\d(compact('tableName',  'diffVal'));
+        }
+        
+
+        /*
         foreach ($modelSchema as $model) {
             $upCommand = $pOrm
                 ->build_migration()
                 ->buildCreateModel($model->toArray());
-            $this->buildMigration(
+            $this->writeMigration(
                 [
                     'MIGRATION_NAME' => '0001',
                     'MIGRATION_DEP' => '',
@@ -76,6 +90,7 @@ class Schema
                 $migrationFolder
             );
         }
+        */
     }
 
     public function diffFromDbToMigration()

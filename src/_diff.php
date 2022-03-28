@@ -17,20 +17,32 @@ class Diff
 
     public function diffAll($left, $right)
     {
-        $diffTables = $this->diffKey($left, $right);
+        $tableDiffs = $this->diffKey($left, $right);
         $colDiffs = [];
-        if (!empty($diffTables[both])) {
-            foreach ($diffTables[both] as $tKey => $tVal) {
-                $colDiffs[$tKey] = $this->diffKey(
-                    $tVal[left]['OPTION_COLS'],
-                    $tVal[right]['OPTION_COLS']
+        if (!empty($tableDiffs[both])) {
+            $colDiffs = $this->_diffTableOption($tableDiffs[both], 'OPTION_COLS');
+        }
+        return [
+            'tables' => $tableDiffs,
+            'columns' => $colDiffs,
+        ];
+    }
+
+    private function _diffTableOption($compareArr, $compareKey)
+    {
+        $result = [];
+        if (!empty($compareArr)) {
+            foreach ($compareArr as $tKey => $tVal) {
+                $result[$tKey] = $this->diffKey(
+                    $tVal[left][$compareKey],
+                    $tVal[right][$compareKey]
                 );
-                if (!empty($colDiffs[$tKey][both])) {
-                    $this->_diffColValue($colDiffs[$tKey]);
+                if (!empty($result[$tKey][both])) {
+                    $this->_diffColValue($result[$tKey]);
                 }
             }
         }
-        \PMVC\d(compact('colDiffs'));
+        return $result;
     }
 
     private function _diffColValue(&$cols)
