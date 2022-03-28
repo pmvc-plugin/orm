@@ -7,7 +7,7 @@ use PMVC\PlugIn\orm\BaseSqlModel;
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Profile';
 
 #[Table("profile")] 
-#[Field("id-a", "int")] 
+#[Field("id_a", "int")] 
 #[Field("id-b", "int")] 
 class Profile extends BaseSqlModel
 {

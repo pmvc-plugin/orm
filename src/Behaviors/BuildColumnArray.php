@@ -50,7 +50,7 @@ class BuildColumnArray implements Behavior
                 $bindName = $this->_table->getBindName($col['default']);
                 $row['default'] = 'DEFAULT (:' . $bindName . ')';
             }
-            $cols[] = $row;
+            $cols[$row['name']] = $row;
         }
         if (!empty($primaryArr)) {
             $opList['primaryKey'] = 'PRIMARY KEY ('.join(', ', $primaryArr).')';

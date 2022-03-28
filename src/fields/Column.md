@@ -6,8 +6,10 @@
  *   https://www.sqlite.org/syntax/column-constraint.html
  * pgsql https://www.postgresql.org/docs/current/datatype.html
  * django https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types
+ *    backend example https://github.com/django/django/tree/main/django/db/backends
+ *    field list: https://github.com/django/django/blob/main/django/db/models/fields/__init__.py#L34-L67
  */
-class xxxColumnType extends ListIterator
+class ColumnType extends ListIterator
 {
     protected function getInitialState()
     {
