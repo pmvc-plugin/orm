@@ -25,6 +25,7 @@ class PDOWrap
     private function _initPdo($dsn)
     {
         $this->_dsn = $dsn;
+        var_dump($dsn);
         $this->_pdo = new PDO($dsn);
         return $this->_pdo;
     }

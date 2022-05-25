@@ -14,6 +14,7 @@ const PGSQL = 'pgsql';
 const DATABASES = 'databases';
 const DEFAULT_KEY = 'default';
 const TYPE = 'type';
+const THIS_PLUGIN = 'orm';
 
 class orm extends PlugIn
 {
@@ -42,8 +43,14 @@ class orm extends PlugIn
                 $this->_engine = new Engine($configs);
                 break;
         }
+        $this->_engine[TYPE] = $type;
         $dsn = $this->dsn()->buildDsn();
         $this->pdo($dsn);
+    }
+
+    public function getEngineType()
+    {
+        return \PMVC\get($this->_engine, TYPE);
     }
 
     public function compile(array $behaviors, Engine $engine = null)

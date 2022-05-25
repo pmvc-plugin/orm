@@ -1,3 +1,22 @@
+
+# Django
+
+## Django docs.
+* https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types
+* backend example
+  * https://github.com/django/django/tree/main/django/db/backends
+* List
+  * Field types
+    * https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types
+  * field list
+    * https://github.com/django/django/blob/main/django/db/models/fields/__init__.py#L34-L67
+
+## OneToOneField, ForeignKey, ManyToManyField
+https://github.com/twtrubiks/django-field-tutorial
+
+
+
+
 ```
 /**
  * mysql https://dev.mysql.com/doc/refman/8.0/en/data-types.html
@@ -5,7 +24,8 @@
  * sqlite https://www.sqlite.org/datatype3.html
  *   https://www.sqlite.org/syntax/column-constraint.html
  * pgsql https://www.postgresql.org/docs/current/datatype.html
- * django https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types
+ * django
+ *    https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types
  *    backend example https://github.com/django/django/tree/main/django/db/backends
  *    field list: https://github.com/django/django/blob/main/django/db/models/fields/__init__.py#L34-L67
  */

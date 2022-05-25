@@ -34,17 +34,9 @@ class Column extends HashMap
 
     public function verifySpec()
     {
-        $shouldRequired = $this->getAllRequired();
-
-        foreach ($shouldRequired as $key) {
-            if (!isset($this[$key])) {
-                throw new InvalidArgumentException(
-                    'Required field [' . $key . '] not set.'
-                );
-            }
-        }
-
-        return true;
+        return \PMVC\plug('orm')->check_required(
+            $this,
+            $this->getAllRequired()
+        );
     }
 }
-

@@ -21,4 +21,12 @@ class Engine extends Hashmap {
     {
         throw new DomainException('Can not get dsn with default Enginee.');
     }
+
+    public function getAllDsnFields()
+    {
+      return array_merge(
+        $this->getAllDsnRequired(),
+        $this->getAllDsnOptional(),
+      );
+    }
 }
