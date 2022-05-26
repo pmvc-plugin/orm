@@ -47,7 +47,7 @@ class BuildColumnSql implements Behavior
             }
             if ($col['default']) {
                 $bindName = $this->_table->getBindName($col['default']);
-                $row[] = 'DEFAULT (:' . $bindName . ')';
+                $row[] = 'DEFAULT (' . $bindName . ')';
             }
             $opList[] = join(' ', $row);
         }

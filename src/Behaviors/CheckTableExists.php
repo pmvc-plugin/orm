@@ -7,7 +7,13 @@ use PMVC\PlugIn\orm\Engine;
 
 class CheckTableExists implements Behavior
 {
+    public $params;
     private $_exists;
+
+    public function __construct($name)
+    {
+        $this->params = $name;
+    }
 
     public function accept(Engine $engine)
     {

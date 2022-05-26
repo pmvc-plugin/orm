@@ -10,7 +10,7 @@ trait BindTrait
     private $_bindData = [];
     protected $bindKey;
 
-    public function getBindNum()
+    private function _getBindNum()
     {
         static $i = 0;
         return $i++;
@@ -18,10 +18,10 @@ trait BindTrait
 
     public function getBindName($v)
     {
-        $num = $this->getBindNum();
+        $num = $this->_getBindNum();
         $keyName = $this->bindKey.'_'.$num;
         $this->_bindData[$keyName] = $v;
-        return $keyName;
+        return ':'.$keyName;
     }
 
     public function getBindData()

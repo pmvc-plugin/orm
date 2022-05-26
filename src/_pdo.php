@@ -80,7 +80,7 @@ class PDOWrap
 
     public function getOne($sql, array $bindParams = [])
     {
-        $arr = $this->geetAll($sql, $bindParams);
+        $arr = $this->getAll($sql, $bindParams);
         return \PMVC\get($arr, '0');
     }
 

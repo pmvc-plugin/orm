@@ -48,7 +48,7 @@ class BuildColumnArray implements Behavior
             }
             if ($col['default']) {
                 $bindName = $this->_table->getBindName($col['default']);
-                $row['default'] = 'DEFAULT (:' . $bindName . ')';
+                $row['default'] = 'DEFAULT (' . $bindName . ')';
             }
             $cols[$row['name']] = $row;
         }

@@ -41,6 +41,7 @@ class PgsqlEngine extends Engine
 
     public function checkTableExists(Behavior $behavior)
     {
+        $oSql = \PMVC\plug('orm')->sql();
         $sql = <<<EOF
   SELECT EXISTS (
     SELECT FROM 
@@ -48,9 +49,10 @@ class PgsqlEngine extends Engine
     WHERE 
         table_schema LIKE 'public' AND 
         table_type LIKE 'BASE TABLE' AND
-        table_name = 'actor'
+        table_name = {$oSql->getBindName($behavior->params)} 
   );
 EOF;
-        var_dump($sql);
+        $result = $oSql->set($sql)->commit('one');
+        return !empty($result['exists']);
     }
 }
