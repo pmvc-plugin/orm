@@ -39,7 +39,18 @@ class PgsqlEngine extends Engine
         return ['port', 'sslmode'];
     }
 
-    public function checkTableExists($name)
+    public function checkTableExists(Behavior $behavior)
     {
+        $sql = <<<EOF
+  SELECT EXISTS (
+    SELECT FROM 
+        information_schema.tables 
+    WHERE 
+        table_schema LIKE 'public' AND 
+        table_type LIKE 'BASE TABLE' AND
+        table_name = 'actor'
+  );
+EOF;
+        var_dump($sql);
     }
 }

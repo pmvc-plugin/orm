@@ -7,12 +7,13 @@ include_once(__DIR__.'/../vendor/autoload.php');
 \PMVC\plug('dev')->debug_with_cli();
 
 $orm = \PMVC\plug('orm');
-$table = $orm->create_table('profile');
+$table = $orm->table()->create('profile');
 $table->column('id', 'int');
 $table->column('id2', 'int');
 $table['PRIMARY'] = ['id', 'id2'];
 
-// var_dump((string)$table);
+var_dump((string)$table);
+exit();
 
 $pdo = $orm->pdo('sqlite:./test.sqlite');
 $res = $pdo->exec((string)$table);

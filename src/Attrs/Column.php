@@ -1,10 +1,9 @@
 <?php
 
 namespace PMVC\PlugIn\orm\Attrs;
-
 use PMVC\HashMap;
-use PMVC\PlugIn\orm\Interfaces\Behavior;
 
+#[Attribute]
 class Column extends HashMap
 {
     public $name;

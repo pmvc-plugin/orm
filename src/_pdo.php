@@ -6,6 +6,8 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\PDOWrap';
 
 use PDO;
 use DomainException;
+use UnexpectedValueException;
+use PDOException;
 use PMVC\PlugIn\orm\DAO;
 
 class PDOWrap
@@ -25,11 +27,21 @@ class PDOWrap
     private function _initPdo($dsn)
     {
         $this->_dsn = $dsn;
-        var_dump($dsn);
-        $this->_pdo = new PDO($dsn);
+        try {
+            $this->_pdo = new PDO($dsn);
+        } catch (PDOException $e) {
+            $message = json_encode([
+                'Get pdo failed.',
+                'debug' => [
+                    'your-dsn' => $dsn,
+                    'orig-error' => $e->getMessage(),
+                ],
+            ]);
+            throw new UnexpectedValueException($message);
+        }
         return $this->_pdo;
     }
-    
+
     /**
      * @see function _initPdo
      */

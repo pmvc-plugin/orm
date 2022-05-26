@@ -7,4 +7,5 @@ use PMVC\PlugIn\orm\Engine;
 interface Behavior
 {
     public function accept(Engine $engine);
+    public function process();
 }
