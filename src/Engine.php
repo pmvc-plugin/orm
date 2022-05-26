@@ -22,6 +22,11 @@ class Engine extends Hashmap {
         throw new DomainException('Can not get dsn with default Enginee.');
     }
 
+    public function checkTableExists(Behavior $behavior)
+    {
+        throw new DomainException('Can not checkTableExists with default Enginee.');
+    }
+
     public function getAllDsnFields()
     {
       return array_merge(
