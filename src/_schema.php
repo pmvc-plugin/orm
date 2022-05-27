@@ -32,12 +32,8 @@ class Schema
 
     public function fromMigrations($migrationFiles)
     {
-        $migrationFiles = $this->caller->get_all_files(
-            $migrationFiles,
-            '[0-9]*.php'
-        );
         $oDao = $this->caller->dao()->getDao('structure');
-        $this->caller->process_migration($migrationFiles, $oDao);
+        $this->caller->migration()->process($migrationFiles, $oDao);
         return $oDao->toArray();
     }
 

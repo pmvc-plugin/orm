@@ -13,6 +13,8 @@
     * https://github.com/django/django/blob/main/django/db/backends/postgresql/introspection.py#L13-L34
   * recorder
     * https://github.com/django/django/blob/main/django/db/migrations/recorder.py 
+  * Setting
+    * https://github.com/django/django/blob/main/docs/ref/settings.txt#L1282
 
 ## OneToOneField, ForeignKey, ManyToManyField
 https://github.com/twtrubiks/django-field-tutorial
