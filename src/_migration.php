@@ -11,6 +11,24 @@ class Migration
         return $this;
     }
 
+    public function writeMigration(
+        $payload,
+        $migrationFolder,
+        $migrationName = null,
+        $type = null,
+        $migrationPrefix = 'Migration'
+    ) {
+        $migrationFolder = \PMVC\realpath($migrationFolder);
+        if (!empty($migrationFolder)) {
+            $oSN = $this->get_serial_number($migrationFolder);
+            extract(\PMVC\assign(['nextFile', 'nextName'], $oSN->getNextFileName($migrationName, $type)));
+            $payload['MIGRATION_NAME'] = $nextName; 
+            $payload['MIGRATION_PREFIX'] = $migrationPrefix;
+            $content = $this->caller->useTpl('migration', $payload);
+            file_put_contents($nextFile, $content);
+        }
+    }
+
     private function _processEach($files, DAO $dao)
     {
         foreach ($files as $f) {
@@ -28,7 +46,7 @@ class Migration
             '[0-9]*.php'
         );
         if (is_null($oDao)) {
-          $oDao = $this->caller->dao()->getDefault();
+            $oDao = $this->caller->dao()->getDefault();
         }
         $this->_processEach($migrationFiles, $oDao);
         return $oDao;

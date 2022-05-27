@@ -41,17 +41,6 @@ class Schema
     {
     }
 
-    public function writeMigration($payload, $migrationFolder)
-    {
-        $pOrm = \PMVC\plug('orm');
-        $migrationFolder = \PMVC\realpath($migrationFolder);
-        if (!empty($migrationFolder)) {
-            $file = $migrationFolder . '/0001_initial.php';
-            $content = $pOrm->useTpl('migration', $payload);
-            file_put_contents($file, $content);
-        }
-    }
-
     public function diffFromModelToMigration($modelFiles, $migrationFolder = '')
     {
         $modelSchema = $this->fromModels($modelFiles);
@@ -79,9 +68,8 @@ class Schema
                 ->buildCreateModel($model->toArray());
             $this->writeMigration(
                 [
-                    'MIGRATION_NAME' => '0001',
                     'MIGRATION_DEP' => '',
-                    'MIGRATION_OP' => $upCommand,
+                    'MIGRATION_PROCESS' => $upCommand,
                 ],
                 $migrationFolder
             );

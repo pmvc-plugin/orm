@@ -1,6 +1,6 @@
 <?php
 
-namespace PMVC\Migration\Migration_[MIGRATION_NAME];
+namespace PMVC\Migration\[MIGRATION_PREFIX]_[MIGRATION_NAME];
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Migration';
 
@@ -14,8 +14,8 @@ class Migration implements MigrationInterface
 [MIGRATION_DEP]
     }
 
-    public function operations(DAO $dao)
+    public function process(DAO $dao)
     {
-[MIGRATION_OP]
+[MIGRATION_PROCESS]
     }
 }

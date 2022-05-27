@@ -22,13 +22,17 @@ class SN
         $this->_folder = $folder;
     }
 
-    public function getNextName($name='')
+    public function getNextFileName($name='', $type="auto")
     {
-        if (empty($name)) {
-          $name = 'auto_'.gmdate("Ymd_hi").'.php';
-        }
         $nextSN = $this->getNextSN();
-        return $nextSN.'_'.$name;
+        if (1 === (int)$nextSN) {
+          $name = 'initial';
+        } elseif (empty($name)) {
+          $name = $type.'_'.gmdate("Ymd_hi");
+        }
+        $nextName = $nextSN.'_'.$name;
+        $nextFile = this->_folder.'/'.$nextSN.'_'.$name.'.php';
+        return compact('nextName', 'nextFile');
     }
 
     public function getNextSN()
