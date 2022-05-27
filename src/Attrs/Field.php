@@ -5,7 +5,7 @@ namespace PMVC\PlugIn\orm\Attrs;
 #[Attribute]
 class Field extends Column
 {
-    public function gettFieldOptional()
+    public function getFieldOptional()
     {
         return ['blank', 'choices', 'editable'];
     }
@@ -14,7 +14,7 @@ class Field extends Column
     {
         return array_merge(
             parent::getAllOptional(), 
-            $this->gettFieldOptional()
+            $this->getFieldOptional()
         );
     }
 }

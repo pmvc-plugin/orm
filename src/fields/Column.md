@@ -10,6 +10,9 @@
     * https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types
   * field list
     * https://github.com/django/django/blob/main/django/db/models/fields/__init__.py#L34-L67
+    * https://github.com/django/django/blob/main/django/db/backends/postgresql/introspection.py#L13-L34
+  * recorder
+    * https://github.com/django/django/blob/main/django/db/migrations/recorder.py 
 
 ## OneToOneField, ForeignKey, ManyToManyField
 https://github.com/twtrubiks/django-field-tutorial
