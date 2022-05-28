@@ -32,17 +32,18 @@ class SN
         }
         $nextName = $nextSN.'_'.$name;
         $nextFile = this->_folder.'/'.$nextSN.'_'.$name.'.php';
-        return compact('nextName', 'nextFile');
+        $lastName = $this->getLastName();
+        return compact('nextName', 'nextFile', 'lastName');
     }
 
     public function getNextSN()
     {
-        $last = (int)$this->getLastSN();
+        $last = $this->getLastSN();
         $next = ++$last;
         return sprintf('%04d', $next);
     }
 
-    public function getLastFile()
+    public function getLastName()
     {
         $list = $this->_getFileList();
         $last = end($list);
@@ -51,13 +52,13 @@ class SN
 
     public function getLastSN()
     {
-        $last = $this->getLastFile();
+        $last = $this->getLastName();
         preg_match("/(\d+).*/", $last, $matches);
         $lastSN = \PMVC\get($matches, 1);
         if (!is_numeric($lastSN)) { 
           throw new DomainException('Get last sn failed. ['.$last.', '.$lastSN.']');
         } else {
-          return $lastSN;
+          return (int)$lastSN;
         }
     }
 

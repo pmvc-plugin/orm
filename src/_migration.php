@@ -21,9 +21,10 @@ class Migration
         $migrationFolder = \PMVC\realpath($migrationFolder);
         if (!empty($migrationFolder)) {
             $oSN = $this->get_serial_number($migrationFolder);
-            extract(\PMVC\assign(['nextFile', 'nextName'], $oSN->getNextFileName($migrationName, $type)));
+            extract(\PMVC\assign(['nextFile', 'nextName', 'lastName'], $oSN->getNextFileName($migrationName, $type)));
             $payload['MIGRATION_NAME'] = $nextName; 
             $payload['MIGRATION_PREFIX'] = $migrationPrefix;
+            $payload['MIGRATION_DEP'] = $lastName;
             $content = $this->caller->useTpl('migration', $payload);
             file_put_contents($nextFile, $content);
         }
