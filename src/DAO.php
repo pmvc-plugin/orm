@@ -23,12 +23,18 @@ class DAO
 
     public function process()
     {
-        \PMVC\plug('orm')->pdo()->processDao($this);
+        $resultArr = \PMVC\plug('orm')->pdo()->processDao($this);
+        $this->_history = array_merge($this->_history, $resultArr);
+        return $resultArr;
     }
 
-    public function getQueue()
+    public function getQueue($isClean = false)
     {
-        return $this->_queue;
+        $queue = $this->_queue; 
+        if ($isClean) {
+            $this->_queue = [];
+        }
+        return $queue;
     }
 
     public function getHistory()

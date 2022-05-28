@@ -70,10 +70,11 @@ class PDOWrap
 
     public function processDao(DAO $dao)
     {
-        $queueArr = $dao->getQueue();
+        $queueArr = $dao->getQueue(true);
         $resultArr = [];
         foreach ($queueArr as $queue) {
-            $resultArr[] = $this->exec($queue[0], $queue[1]);
+            $result = $this->exec($queue[0], $queue[1]);
+            $resultArr[] = compact('result', 'queue');
         }
         return $resultArr;
     }

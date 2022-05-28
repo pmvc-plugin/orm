@@ -16,7 +16,7 @@ class TableActions
 
     public function create($tableName)
     {
-        return new Table($tableName);
+        return $this->dao()->getDefault()->createModel($tableName);
     }
 
     public function exists($tableName)

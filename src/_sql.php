@@ -28,7 +28,7 @@ class RawSql extends HashMap
 
     public function __toString()
     {
-        return $this['sql'];
+        return (string)$this['sql'];
     }
 
     public function set($sql)

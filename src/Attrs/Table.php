@@ -3,28 +3,35 @@
 namespace PMVC\PlugIn\orm\Attrs;
 
 use PMVC\HashMap;
+use PMVC\PlugIn\orm\DAO;
 use PMVC\PlugIn\orm\BindTrait;
 use PMVC\PlugIn\orm\Behaviors\BuildTableSql;
 use PMVC\PlugIn\orm\Behaviors\BuildColumnSql;
 use PMVC\PlugIn\orm\Behaviors\BuildTableArray;
 use PMVC\PlugIn\orm\Behaviors\BuildColumnArray;
+use DomainException;
 
 #[Attribute]
 class Table extends HashMap
 {
     use BindTrait;
 
-    public $dao;
+    private $_dao;
 
-    public function __construct($v, $dao = null)
+    public function __construct($v, Dao $dao = null)
     {
         if (is_string($v)) {
             $v = ['TABLE_NAME' => $v];
         }
         if (!is_null($dao)) {
-            $this->dao = $dao;
+            $this->setDao($dao);
         }
         parent::__construct($v);
+    }
+
+    public function setDao(Dao $dao)
+    {
+        $this->_dao = $dao;
     }
 
     public function column($name, $type, array $columnOptions = [])
@@ -69,10 +76,10 @@ class Table extends HashMap
 
     public function commit()
     {
-      return $this->dao->commit(
-        $this->__toString(),
-        $this->getBindData()
-      );
+        if (empty($this->_dao)) {
+            throw new DomainException("Not setup dao, use setDao to do it.");
+        }
+        return $this->_dao->commit($this->__toString(), $this->getBindData());
     }
 
     public function toArray()
