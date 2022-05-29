@@ -2,12 +2,12 @@
 
 namespace PMVC\PlugIn\orm;
 
-${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\TableActions';
+${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\RemoteActions';
 
 use PMVC\PlugIn\orm\Attrs\Table;
 use PMVC\PlugIn\orm\Behaviors\CheckTableExists;
 
-class TableActions
+class RemoteActions
 {
     public function __invoke()
     {

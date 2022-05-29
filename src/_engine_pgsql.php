@@ -20,6 +20,37 @@ class GetPgsqlEngine
 
 class PgsqlEngine extends Engine
 {
+
+    private $columnTypes = [ 
+        "AutoField"=> "integer",
+        "BigAutoField"=> "bigint",
+        "BinaryField"=> "bytea",
+        "BooleanField"=> "boolean",
+        "CharField"=> "varchar([MAX_LENGTH])",
+        "DateField"=> "date",
+        "DateTimeField"=> "timestamp with time zone",
+        "DecimalField"=> "numeric([MAX_DIGITS], [DECIMAL_PLACES])",
+        "DurationField"=> "interval",
+        "FileField"=> "varchar([MAX_LENGTH])",
+        "FilePathField"=> "varchar([MAX_LENGTH])",
+        "FloatField"=> "double precision",
+        "IntegerField"=> "integer",
+        "BigIntegerField"=> "bigint",
+        "IPAddressField"=> "inet",
+        "GenericIPAddressField"=> "inet",
+        "JSONField"=> "jsonb",
+        "OneToOneField"=> "integer",
+        "PositiveBigIntegerField"=> "bigint",
+        "PositiveIntegerField"=> "integer",
+        "PositiveSmallIntegerField"=> "smallint",
+        "SlugField"=> "varchar([MAX_LENGTH])",
+        "SmallAutoField"=> "smallint",
+        "SmallIntegerField"=> "smallint",
+        "TextField"=> "text",
+        "TimeField"=> "time",
+        "UUIDField"=> "uuid",
+    ]; 
+
     /**
      * https://www.php.net/manual/en/ref.pdo-pgsql.connection.php
      */
@@ -37,6 +68,11 @@ class PgsqlEngine extends Engine
     public function getAllDsnOptional()
     {
         return ['port', 'sslmode'];
+    }
+
+    public function getColumnType(Behavior $behavior)
+    {
+	$behavior->setColumnTypes($this->columnTypes);
     }
 
     public function checkTableExists(Behavior $behavior)

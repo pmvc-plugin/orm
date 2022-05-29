@@ -2,19 +2,20 @@
 
 namespace PMVC\PlugIn\orm\Fields;
 use PMVC\PlugIn\orm\Attrs\Field;
+use PMVC\PlugIn\orm;
 
 #[Attribute]
 class AutoField extends Field
 {
     public $fieldType = "AutoField";
 
-    public function __construct($name, $type = null, array $columnOptions = [])
+    public function __construct($name, array $columnOptions = [])
     {
-        if (is_null($type)) {
-            $type = "int";
+        if (is_null($columnOptions[orm\TYPE])) {
+            $columnOptions[orm\TYPE] = "int";
         }
         $columnOptions['primaryKey'] = true;
         $columnOptions['autoIncrement'] = true;
-        parent::__construct($name, $type, $columnOptions);
+        parent::__construct($name, null, $columnOptions);
     }
 }

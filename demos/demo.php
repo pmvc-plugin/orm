@@ -7,7 +7,7 @@ include_once(__DIR__.'/../vendor/autoload.php');
 \PMVC\plug('dev')->debug_with_cli();
 
 $orm = \PMVC\plug('orm');
-$table = $orm->table()->create('profile');
+$table = $orm->remote()->create('profile');
 $table->column('id', 'int');
 $table->column('id2', 'int');
 $table['PRIMARY'] = ['id', 'id2'];

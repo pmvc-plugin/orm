@@ -16,4 +16,4 @@ $orm = \PMVC\plug("orm", [
 ]);
 
 $orm->setEngine();
-\PMVC\d($orm->table()->exists('aaa'));
+\PMVC\d($orm->remote()->exists('aaa'));

@@ -1,7 +1,9 @@
 <?php
 
 namespace PMVC\PlugIn\orm\Attrs;
+
 use PMVC\HashMap;
+use PMVC\PlugIn\orm;
 
 #[Attribute]
 class Column extends HashMap
@@ -12,13 +14,24 @@ class Column extends HashMap
     {
         $this->name = $name;
         $columnOptions['name'] = $name;
-        $columnOptions['type'] = $type;
+
+        if (!isset($columnOptions[orm\TYPE])) {
+            if (!is_null($type)) {
+                $columnOptions[orm\TYPE] = $type;
+            } elseif (!empty($this->fieldType)) {
+                $columnOptions[orm\TYPE] = \PMVC\plug('orm')->get_default_type(
+                    $this->fieldType,
+                    $columnOptions
+                );
+            }
+        }
+
         parent::__construct($columnOptions);
     }
 
     public function getAllRequired()
     {
-        return ['name', 'type'];
+        return ['name', orm\TYPE];
     }
 
     public function getAllOptional()

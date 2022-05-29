@@ -6,8 +6,6 @@ use PMVC\PlugIn\orm\Interfaces\Behavior;
 use PMVC\PlugIn\orm\Engine;
 use PMVC\PlugIn\orm;
 
-const TYPE = orm\TYPE;
-
 class BuildDsn implements Behavior
 {
     public $params;
@@ -57,6 +55,6 @@ class BuildDsn implements Behavior
         $dsn = is_string($this->_dsn)
             ? $this->_dsn
             : $this->stringify($this->_dsn);
-        return $this->_engine[TYPE] . ':' . $dsn;
+        return $this->_engine[orm\TYPE] . ':' . $dsn;
     }
 }
