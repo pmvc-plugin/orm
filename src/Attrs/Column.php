@@ -9,6 +9,7 @@ use PMVC\PlugIn\orm;
 class Column extends HashMap
 {
     public $name;
+    protected $baseFieldType;
 
     public function __construct($name, $type, array $columnOptions = [])
     {
@@ -19,6 +20,9 @@ class Column extends HashMap
             if (!is_null($type)) {
                 $columnOptions[orm\TYPE] = $type;
             } elseif (!empty($this->fieldType)) {
+                if (empty($columnOptions['baseType'])) {
+                    $columnOptions['baseType'] = $this->baseFieldType;
+                }
                 $columnOptions[orm\TYPE] = \PMVC\plug('orm')->get_default_type(
                     $this->fieldType,
                     $columnOptions

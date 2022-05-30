@@ -7,13 +7,14 @@ use PMVC\PlugIn\orm;
 #[Attribute]
 class BaseText extends Field
 {
-    public $fieldType = 'BaseText';
+    private static $baseType='BaseText'; 
 
     public function __construct($name, array $columnOptions = [])
     {
-        if (is_null($columnOptions[orm\TYPE])) {
-            $columnOptions[orm\TYPE] = 'text';
+        if (empty($this->fieldType)) {
+            $this->fieldType = self::$baseType;
         }
+        $this->baseFieldType = self::$baseType;
         parent::__construct($name, null, $columnOptions);
     }
 }

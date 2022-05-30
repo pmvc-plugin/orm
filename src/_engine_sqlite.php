@@ -42,7 +42,7 @@ class SqliteEngine extends Engine
             $store = ':memory:';
         }
         $behavior->setDsn($store);
-        return $behavior->process();
+        return $behavior;
     }
 
     public function getAllDsnRequired()

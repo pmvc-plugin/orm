@@ -2,8 +2,10 @@
 
 namespace PMVC\PlugIn\orm;
 
+use PMVC\PlugIn\orm\Interfaces\Behavior;
 use PMVC\PlugIn;
 use PDO;
+use DomainException;
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\orm';
 
@@ -60,7 +62,11 @@ class orm extends PlugIn
         }
         $res = [];
         foreach ($behaviors as $bKey => $behavior) {
-            $res[$bKey] = $behavior->accept($engine);
+            $nextBehavior = $behavior->accept($engine);
+            if (!$nextBehavior instanceof Behavior) {
+                throw new DomainException("Not get behavior accept object");
+            }
+            $res[$bKey] = $nextBehavior->process();
         }
         return $res;
     }

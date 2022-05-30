@@ -10,9 +10,6 @@ class CharField extends BaseText
 
     public function __construct($name, array $columnOptions = [])
     {
-        if (is_null($columnOptions[orm\TYPE])) {
-            $columnOptions[orm\TYPE] = 'text';
-        }
-        parent::__construct($name, null, $columnOptions);
+        parent::__construct($name, $columnOptions);
     }
 }

@@ -5,17 +5,14 @@ use PMVC\PlugIn\orm\Attrs\Field;
 use PMVC\PlugIn\orm;
 
 #[Attribute]
-class AutoField extends Field
+class AutoField extends BaseInteger 
 {
     public $fieldType = "AutoField";
 
     public function __construct($name, array $columnOptions = [])
     {
-        if (is_null($columnOptions[orm\TYPE])) {
-            $columnOptions[orm\TYPE] = "int";
-        }
         $columnOptions['primaryKey'] = true;
         $columnOptions['autoIncrement'] = true;
-        parent::__construct($name, null, $columnOptions);
+        parent::__construct($name, $columnOptions);
     }
 }

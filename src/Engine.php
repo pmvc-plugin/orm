@@ -9,12 +9,15 @@ use DomainException;
 class Engine extends Hashmap {
     public function buildCreateTable(Behavior $behavior)
     {
-        return $behavior->process();
+        return $behavior;
     }
 
     public function buildColumn(Behavior $behavior)
     {
-        return $behavior->process();
+        if ($this->transform) {
+          $behavior->transform = $this->transform;
+        }
+        return $behavior;
     }
 
     public function buildDsn(Behavior $behavior)

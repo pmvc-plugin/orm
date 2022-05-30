@@ -9,7 +9,7 @@ use PMVC\PlugIn\orm\Fields\DateTimeField;
 
 class Migration
 {
-     prvate $_recorder;
+    private $_recorder;
 
     public function __invoke()
     {
@@ -87,9 +87,9 @@ class MigrationRecorder
     public function getTableDefineds()
     {
         return [
-            new CharField('app', ['MAX_LENGTH' => 255]),
+            new CharField('prefix', ['MAX_LENGTH' => 255]),
             new CharField('name', ['MAX_LENGTH' => 255]),
-            new DateTimeField('applied', ['default' => 'now']),
+            new DateTimeField('applied', ['default' => 'NOW']),
         ];
     }
 }

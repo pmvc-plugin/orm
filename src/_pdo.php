@@ -8,6 +8,7 @@ use PDO;
 use DomainException;
 use UnexpectedValueException;
 use PDOException;
+use Exception;
 use PMVC\PlugIn\orm\DAO;
 
 class PDOWrap
@@ -56,7 +57,17 @@ class PDOWrap
     public function exec($sql, array $bindParams = [])
     {
         $this->_lastState = $this->_getPdo()->prepare($sql);
-        $result = $this->couldRun($this->_lastState)->execute($bindParams);
+        try {
+           $result = $this->couldRun($this->_lastState)->execute($bindParams);
+        } catch (Exception $e) {
+            $message = json_encode([
+                $e->getMessage(),
+                'debug' => [
+                  'sql' => $sql
+                ],
+            ]);
+            throw new UnexpectedValueException($message);
+        }
         return $result;
     }
 

@@ -28,6 +28,14 @@ class BuildColumnArray implements Behavior
         $row[$key] = $val;
     }
 
+    private function _transform($key)
+    {
+        if (isset($this->transform[$key])) {
+            return $this->transform[$key];
+        }
+        return $key;
+    }
+
     protected function processRow($col, $keep = null, $primary = null)
     {
         $rowName = $col['name'];
@@ -48,7 +56,11 @@ class BuildColumnArray implements Behavior
             $this->setRow($row, 'primaryKey', 'PRIMARY KEY');
         }
         if ($col['autoIncrement']) {
-            $this->setRow($row, 'autoIncrement', $this->strAutoIncrement);
+            $this->setRow(
+                $row,
+                'autoIncrement',
+                \PMVC\get($this->transform, 'AUTO_INCREMENT')
+            );
         }
         if ($col['notNull']) {
             $this->setRow($row, 'notNull', 'NOT NULL');
@@ -57,8 +69,13 @@ class BuildColumnArray implements Behavior
             $this->setRow($row, 'unique', 'UNIQUE');
         }
         if ($col['default']) {
-            $bindName = $this->_table->getBindName($col['default']);
-            $this->setRow($row, 'default', 'DEFAULT (' . $bindName . ')');
+            if ('BaseText' === $col['baseType']) {
+                $bindName = $this->_table->getBindName($col['default']);
+                $nextDefaultValue = "'" . $bindName . "'";
+            } else {
+                $nextDefaultValue = $this->_transform($col['default']);
+            }
+            $this->setRow($row, 'default', 'DEFAULT ' . $nextDefaultValue);
         }
         return compact('row', 'rowName');
     }
@@ -75,21 +92,24 @@ class BuildColumnArray implements Behavior
         $allRowMap = [];
         foreach ($columns as $col) {
             extract(
-                \PMVC\assign(['row', 'rowName'], $this->processRow($col, $keep, $primary))
+                \PMVC\assign(
+                    ['row', 'rowName'],
+                    $this->processRow($col, $keep, $primary)
+                )
             );
             $allRowSeq[] = join(' ', $row);
             $allRowMap[$rowName] = $row;
         }
-        extract(
-            \PMVC\assign(['hasPrimary', 'primaryArr'], \PMVC\get($keep))
-        );
+        extract(\PMVC\assign(['hasPrimary', 'primaryArr'], \PMVC\get($keep)));
         if (!$hasPrimary) {
-          if (isset($allRowMap['id'])) {
-              throw DomainException("You need handle primaryKey by yourself when id column exists");
-          }
-          $autoPrimary = $this->processRow(new AutoField("id"));
-          array_unshift($allRowSeq, join(' ', $autoPrimary['row']));
-          $allRowMap[$autoPrimary['rowName']] = $autoPrimary['row'];
+            if (isset($allRowMap['id'])) {
+                throw DomainException(
+                    'You need handle primaryKey by yourself when id column exists'
+                );
+            }
+            $autoPrimary = $this->processRow(new AutoField('id'));
+            array_unshift($allRowSeq, join(' ', $autoPrimary['row']));
+            $allRowMap[$autoPrimary['rowName']] = $autoPrimary['row'];
         }
         return compact('allRowSeq', 'allRowMap', 'primaryArr');
     }

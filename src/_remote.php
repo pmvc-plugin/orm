@@ -16,7 +16,7 @@ class RemoteActions
 
     public function create($tableName)
     {
-        return $this->dao()->getDefault()->createModel($tableName);
+        return $this->caller->dao()->getDefault()->createModel($tableName);
     }
 
     public function exists($tableName)
