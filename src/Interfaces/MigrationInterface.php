@@ -7,5 +7,5 @@ use PMVC\PlugIn\orm\DAO;
 interface MigrationInterface 
 {
     public function dependencies();
-    public function operations(DAO $dao);
+    public function process(DAO $dao);
 }
