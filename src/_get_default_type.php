@@ -8,9 +8,15 @@ use PMVC\PlugIn\orm\Behaviors\GetColumnType;
 
 class GetDefaultType
 {
+    /**
+     * https://www.sqlite.org/datatype3.html
+     */
     private $_baseTypes = [
-        'BaseText' => 'text',
+        'BaseBlob' => 'blob',
         'BaseInteger' => 'int',
+        'BaseNumeric' => 'numeric',
+        'BaseReal' => 'real',
+        'BaseText' => 'text',
     ];
 
     public function __invoke($fieldType, $options)

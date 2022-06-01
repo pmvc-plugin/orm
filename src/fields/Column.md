@@ -28,6 +28,8 @@ https://github.com/twtrubiks/django-field-tutorial
  *   https://wtools.io/generate-sql-create-table
  * sqlite https://www.sqlite.org/datatype3.html
  *   https://www.sqlite.org/syntax/column-constraint.html
+ *   https://www.sqlite.org/lang_createtable.html
+ *   https://www.sqlite.org/datatype3.html
  * pgsql https://www.postgresql.org/docs/current/datatype.html
  * django
  *    https://docs.djangoproject.com/en/3.2/ref/models/fields/#field-types

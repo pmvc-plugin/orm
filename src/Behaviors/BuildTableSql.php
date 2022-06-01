@@ -19,6 +19,6 @@ class BuildTableSql implements Behavior
 
     public function process()
     {
-        return \PMVC\plug('orm')->useTpl('create_table', ['TABLE_NAME', 'OPTION_LIST'], $this->_table);
+        return \PMVC\plug('orm')->useTpl('createTable', ['TABLE_NAME', 'OPTION_LIST'], $this->_table);
     }
 }
