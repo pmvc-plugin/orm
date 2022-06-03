@@ -2,12 +2,9 @@
 
 namespace PMVC\PlugIn\orm;
 
-use PMVC\PlugIn\orm\Interfaces\Behavior;
-use PMVC\PlugIn;
-use PDO;
-use DomainException;
-
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\orm';
+
+use PMVC\PlugIn;
 
 const SQLITE = 'sqlite';
 const MYSQL = 'mysql';
@@ -20,11 +17,9 @@ const THIS_PLUGIN = 'orm';
 
 class orm extends PlugIn
 {
-    private $_engine;
 
     public function init()
     {
-        $this->_engine = new Engine();
     }
 
     public function setEngine($databaseId = DEFAULT_KEY)
@@ -33,42 +28,20 @@ class orm extends PlugIn
         $type = \PMVC\get($configs, TYPE);
         switch ($type) {
             case SQLITE:
-                $this->_engine = $this->engine_sqlite($configs);
+                $engine = $this->engine_sqlite($configs);
                 break;
             case MYSQL:
-                $this->_engine = $this->engine_mysql($configs);
+                $engine = $this->engine_mysql($configs);
                 break;
             case PGSQL:
-                $this->_engine = $this->engine_pgsql($configs);
+                $engine = $this->engine_pgsql($configs);
                 break;
             default:
-                $this->_engine = new Engine($configs);
+                $engine = new Engine($configs);
                 break;
         }
-        $this->_engine[TYPE] = $type;
-        $dsn = $this->dsn()->buildDsn();
-        $this->pdo($dsn);
-    }
-
-    public function getEngineType()
-    {
-        return \PMVC\get($this->_engine, TYPE);
-    }
-
-    public function compile(array $behaviors, Engine $engine = null)
-    {
-        if (is_null($engine)) {
-            $engine = $this->_engine;
-        }
-        $res = [];
-        foreach ($behaviors as $bKey => $behavior) {
-            $nextBehavior = $behavior->accept($engine);
-            if (!$nextBehavior instanceof Behavior) {
-                throw new DomainException("Not get behavior accept object");
-            }
-            $res[$bKey] = $nextBehavior->process();
-        }
-        return $res;
+        $engine[TYPE] = $type;
+        $this->behavior($engine);
     }
 
     public function getTpl($tplKey)

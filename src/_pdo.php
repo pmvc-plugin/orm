@@ -49,6 +49,12 @@ class PDOWrap
     private function _getPdo()
     {
         if (!$this->_pdo) {
+            $dsn = $this->caller->dsn()->buildDsn(); 
+            if ($dsn) {
+                $this->_initPdo($dsn);
+            }
+        }
+        if (!$this->_pdo) {
             throw new DomainException('Not init pdo.');
         }
         return $this->_pdo;

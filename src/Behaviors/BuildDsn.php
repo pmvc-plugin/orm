@@ -12,11 +12,6 @@ class BuildDsn implements Behavior
     private $_dsn;
     private $_engine;
 
-    public function __construct($ormDsnFunc)
-    {
-        $this->params = $ormDsnFunc;
-    }
-
     public function accept(Engine $engine)
     {
         $this->_engine = $engine;

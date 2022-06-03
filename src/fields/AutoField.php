@@ -1,8 +1,7 @@
 <?php
 
 namespace PMVC\PlugIn\orm\Fields;
-use PMVC\PlugIn\orm\Attrs\Field;
-use PMVC\PlugIn\orm;
+use PMVC\PlugIn\orm\Attrs\BaseInteger;
 
 #[Attribute]
 class AutoField extends BaseInteger 

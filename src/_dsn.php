@@ -5,7 +5,6 @@ namespace PMVC\PlugIn\orm;
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\DSN';
 
 use PDO;
-use PMVC\PlugIn\orm\Behaviors\BuildDsn;
 
 class DSN
 {
@@ -23,10 +22,9 @@ class DSN
 
     public function buildDsn()
     {
-        $result =  $this->caller->compile([
-            new BuildDsn($this)
-        ]);
-        return \PMVC\get($result, 0);
+        return \PMVC\plug('orm')
+            ->behavior()
+            ->buildDsn();
     }
 }
 

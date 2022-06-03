@@ -4,7 +4,6 @@ namespace PMVC\PlugIn\orm;
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\GetDefaultType';
 
-use PMVC\PlugIn\orm\Behaviors\GetColumnType;
 
 class GetDefaultType
 {
@@ -12,24 +11,38 @@ class GetDefaultType
      * https://www.sqlite.org/datatype3.html
      */
     private $_baseTypes = [
-        'BaseBlob' => 'blob',
-        'BaseInteger' => 'int',
-        'BaseNumeric' => 'numeric',
-        'BaseReal' => 'real',
-        'BaseText' => 'text',
+      'BaseBlob' => [
+          'type' => 'blob',
+          'field' => 'BinaryField',
+        ],
+        'BaseInteger' => [
+          'type' => 'int',
+          'field' => 'IntegerField',
+        ],
+        'BaseNumeric' => [
+          'type' => 'numeric',
+          'field' => 'DecimalField',
+        ],
+        'BaseReal' => [
+          'type' => 'real',
+          'field' => 'FloatField',
+        ],
+        'BaseText' => [
+          'type' => 'text',
+          'field' => 'TextField',
+        ],
     ];
 
     public function __invoke($fieldType, $options)
     {
-        $result = $this->caller->compile([
-            new GetColumnType($fieldType, $options),
-        ]);
-        return \PMVC\get($result, 0, function () use ($fieldType, $options) {
+        $type = \PMVC\plug('orm')->behavior()->getColumnType($fieldType, $options); 
+        if (!$type) {
             if (!empty($options['baseType'])) {
-                return \PMVC\get($this->_baseTypes, $options['baseType']);
+                $type = \PMVC\get($this->_baseTypes, $options['baseType']);
             } else {
-                \PMVC\triggerJson("Not found type", compact('fieldType', 'options'));
+                return \PMVC\triggerJson("Not found type", compact('fieldType', 'options'));
             }
-        });
+        }
+        return $type;
     }
 }

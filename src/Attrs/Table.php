@@ -5,10 +5,6 @@ namespace PMVC\PlugIn\orm\Attrs;
 use PMVC\HashMap;
 use PMVC\PlugIn\orm\DAO;
 use PMVC\PlugIn\orm\BindTrait;
-use PMVC\PlugIn\orm\Behaviors\BuildTableSql;
-use PMVC\PlugIn\orm\Behaviors\BuildColumnSql;
-use PMVC\PlugIn\orm\Behaviors\BuildTableArray;
-use PMVC\PlugIn\orm\Behaviors\BuildColumnArray;
 use DomainException;
 
 #[Attribute]
@@ -77,31 +73,22 @@ class Table extends HashMap
     public function commit()
     {
         if (empty($this->_dao)) {
-            throw new DomainException("Not setup dao, use setDao to do it.");
+            throw new DomainException('Not setup dao, use setDao to do it.');
         }
         return $this->_dao->commit($this->__toString(), $this->getBindData());
     }
 
     public function toArray()
     {
-        $this['OPTION_LIST'] = null;
-        $this['OPTION_COLS'] = null;
-        $res = \PMVC\plug('orm')->compile([
-            new BuildColumnArray($this),
-            new BuildTableArray($this),
-        ]);
-
-        return $res[count($res) - 1];
+        return \PMVC\plug('orm')
+            ->behavior()
+            ->tableToArray($this);
     }
 
     public function __toString()
     {
-        $this['OPTION_LIST'] = null;
-        $res = \PMVC\plug('orm')->compile([
-            new BuildColumnSql($this),
-            new BuildTableSql($this),
-        ]);
-
-        return $res[count($res) - 1];
+        return \PMVC\plug('orm')
+            ->behavior()
+            ->tableToSql($this);
     }
 }
