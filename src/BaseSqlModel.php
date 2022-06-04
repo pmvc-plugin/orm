@@ -3,35 +3,44 @@
 namespace PMVC\PlugIn\orm;
 
 use PMVC\HashMap;
+use PMVC\PlugIn\orm\WhereTrait;
 
-class BaseSqlModel {
-  
-  protected function initData($data) {
-      if (is_null($data)) {
-          $data = new DataList();
-      }
-      return $data;
-  } 
+class BaseSqlModel
+{
+    use WhereTrait;
 
-  public function where($op = "and", $data = null) {
-      $data = $this->initData($data);
-      return $data;
-  }
+    protected function initData($data)
+    {
+        if (is_null($data)) {
+            $data = new DataList();
+        }
+        return $data;
+    }
 
-  public function setMultiWhere($op = "and", $data = null) {
-      $data = $this->initData($data);
-      return $data;
-  }
-};
+    public function getAll()
+    {
+        return new DataList($this, 'all');
+    }
 
-class DataList extends HashMap {
-    private $_model;
-    public function __construct($model) {
-        $this->_model = $model;
-        $this['where'] = new Where($op);
+    public function getOne()
+    {
+        return new DataList($this, 'one');
+    }
+
+    public function getVar()
+    {
+        return new DataList($this, 'var');
     }
 }
 
-class Where extends HashMap {
-
+class DataList extends HashMap
+{
+    private $_model;
+    private $_type;
+    public function __construct(BaseSqlModel $model, string $type)
+    {
+        $this->_model = $model;
+        $this->_type = $type;
+    }
 }
+

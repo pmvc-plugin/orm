@@ -33,12 +33,21 @@ class GetDefaultType
         ],
     ];
 
+    public $engineTypes;
+
     public function __invoke($fieldType, $options)
     {
+        $options['setter'] = $this;
         $type = \PMVC\plug('orm')->behavior()->getColumnType($fieldType, $options); 
         if (!$type) {
             if (!empty($options['baseType'])) {
-                $type = \PMVC\get($this->_baseTypes, $options['baseType']);
+                $typeMap = \PMVC\get($this->_baseTypes, $options['baseType']);
+                if (!empty($this->engineTypes)) {
+                    $type = $this->engineTypes[$typeMap['field']];
+                }
+                if (empty($type)) {
+                    $type = $typeMap['type'];
+                }
             } else {
                 return \PMVC\triggerJson("Not found type", compact('fieldType', 'options'));
             }

@@ -14,7 +14,7 @@ class Engine extends Hashmap {
 
     public function buildColumn(Behavior $behavior)
     {
-        if ($this->transform) {
+        if (!empty($this->transform)) {
           $behavior->transform = $this->transform;
         }
         return $behavior;
@@ -23,6 +23,12 @@ class Engine extends Hashmap {
     public function buildDsn(Behavior $behavior)
     {
         throw new DomainException('Can not get dsn with default Enginee.');
+    }
+
+
+    public function getColumnType(Behavior $behavior)
+    {
+        return $behavior;
     }
 
     public function checkTableExists(Behavior $behavior)

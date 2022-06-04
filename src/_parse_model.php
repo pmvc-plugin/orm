@@ -27,8 +27,9 @@ class ParseModel
         $fieldMap = [];
         $colMap = [];
         foreach ($fields as $field) {
-            $allColumns[$field->name] = $field;
-            $fieldMap[$field->name] = $field;
+            $oField = $field->getField();
+            $fieldMap[$oField->name] =
+            $allColumns[$oField->name] = $oField;
         }
         foreach ($cols as $col) {
             $allColumns[$col->name] = $col;

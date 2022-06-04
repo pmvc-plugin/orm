@@ -13,6 +13,7 @@ services:
       MYSQL_PASSWORD: mysql
   php:
     image: hillliu/pmvc-phpunit:8.1
+    working_dir: /var/www/html/orm/demos
     depends_on:
     - pgsql
     - mysql

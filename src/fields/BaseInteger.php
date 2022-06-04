@@ -1,11 +1,11 @@
 <?php
 
-namespace PMVC\PlugIn\orm\Attrs;
+namespace PMVC\PlugIn\orm\Fields;
 
 #[Attribute]
-class BaseText extends Field
+class BaseInteger extends BaseField
 {
-    private static $baseType='BaseText'; 
+    private static $baseType='BaseInteger'; 
 
     public function __construct($name, array $columnOptions = [])
     {

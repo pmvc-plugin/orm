@@ -30,13 +30,18 @@ class GetColumnType implements Behavior
 
     public function process()
     {
-        if (isset($this->_types[$this->params['fieldType']])) {
-            $columnType = $this->_types[$this->params['fieldType']];
-            $result = \PMVC\tplArrayReplace(
-                $columnType,
-                $this->params['options']
-            );
-            return $result;
+        if (!empty($this->_types)) {
+            if (!empty($this->params['options']['setter'])) {
+                $this->params['options']['setter']->engineTypes = $this->_types;
+            }
+            if (isset($this->_types[$this->params['fieldType']])) {
+                $columnType = $this->_types[$this->params['fieldType']];
+                $result = \PMVC\tplArrayReplace(
+                    $columnType,
+                    $this->params['options']
+                );
+                return $result;
+            }
         }
     }
 }

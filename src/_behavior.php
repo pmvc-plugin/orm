@@ -63,9 +63,9 @@ class BehaviorAction
         return end($res);
     }
 
-    public function getColumnType(string $fieldType, array $options)
+    public function getColumnType(string $fieldType, array $options, $setter = null)
     {
-        $res = $this->compile([new GetColumnType($fieldType, $options)]);
+        $res = $this->compile([new GetColumnType($fieldType, $options, $setter)]);
 
         return end($res);
     }

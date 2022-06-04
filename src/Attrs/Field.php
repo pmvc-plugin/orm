@@ -2,19 +2,29 @@
 
 namespace PMVC\PlugIn\orm\Attrs;
 
+use PMVC\PlugIn\orm\Fields\BaseField;
+
 #[Attribute]
-class Field extends Column
+class Field
 {
-    public function getFieldOptional()
-    {
-        return ['blank', 'choices', 'editable'];
+    private $_field;
+
+    public function __construct(
+        string $name,
+        string $type,
+        array $columnOptions = []
+    ) {
+        $namespace = 'PMVC\PlugIn\orm\Fields';
+        $class = $namespace . '\\' . $type;
+        if (class_exists($class)) {
+            $this->_field = new $class($name, $columnOptions);
+        } else {
+            $this->_field = new BaseField($name, $type, $columnOptions);
+        }
     }
 
-    public function getAllOptional()
+    public function getField()
     {
-        return array_merge(
-            parent::getAllOptional(), 
-            $this->getFieldOptional()
-        );
+        return $this->_field;
     }
 }

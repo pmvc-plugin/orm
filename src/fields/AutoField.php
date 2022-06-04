@@ -1,12 +1,10 @@
 <?php
 
 namespace PMVC\PlugIn\orm\Fields;
-use PMVC\PlugIn\orm\Attrs\BaseInteger;
 
-#[Attribute]
-class AutoField extends BaseInteger 
+class AutoField extends BaseInteger
 {
-    public $fieldType = "AutoField";
+    public $fieldType = 'AutoField';
 
     public function __construct($name, array $columnOptions = [])
     {

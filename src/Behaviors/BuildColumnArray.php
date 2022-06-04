@@ -25,7 +25,7 @@ class BuildColumnArray implements Behavior
 
     protected function setRow(&$row, $key, $val)
     {
-        $row[$key] = $val;
+        $row[$key] = \PMVC\get($val, 0, $val);
     }
 
     private function _transform($key)
@@ -45,7 +45,7 @@ class BuildColumnArray implements Behavior
         if ($primary) {
             if (count($primary) === 1) {
                 if ($primary[0] === $rowName) {
-                    $this->setRow($row, 'primaryKey', 'PRIMARY KEY');
+                    $this->setRow($row, 'primaryKey', [true, 'PRIMARY KEY']);
                 }
             } else {
                 if (in_array($colName, $primary)) {
@@ -53,13 +53,16 @@ class BuildColumnArray implements Behavior
                 }
             }
         } elseif ($col['primaryKey']) {
-            $this->setRow($row, 'primaryKey', 'PRIMARY KEY');
+            $this->setRow($row, 'primaryKey', [true, 'PRIMARY KEY']);
         }
         if ($col['autoIncrement']) {
             $this->setRow(
                 $row,
                 'autoIncrement',
-                \PMVC\get($this->transform, 'AUTO_INCREMENT')
+                [
+                  true,
+                  \PMVC\get($this->transform, 'AUTO_INCREMENT')
+                ]
             );
         }
         if ($col['notNull']) {

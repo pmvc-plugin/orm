@@ -14,7 +14,7 @@ class BuildColumnSql extends BuildColumnArray
 
     protected function setRow(&$row, $key, $val)
     {
-        $row[] = $val;
+        $row[] = \PMVC\get($val, 1, $val);
     }
 
     public function process()
