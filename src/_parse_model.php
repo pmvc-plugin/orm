@@ -12,10 +12,20 @@ class ParseModel
     const renameTable = 'PMVC\PlugIn\orm\Attrs\RenameTable';
     const renameColumn = 'PMVC\PlugIn\orm\Attrs\RenameColumn';
 
-    public function __invoke(string $fileName)
+    public function __invoke()
     {
-        $r = \PMVC\l($fileName, _INIT_CONFIG);
-        $class = \PMVC\value($r, ['var', _INIT_CONFIG, _CLASS]);
+        return $this;
+    }
+
+    public function fromFile(string $fileName)
+    {
+        $importFrom = \PMVC\l($fileName);
+        $class = \PMVC\importClass($importFrom);
+        return $this->fromClass($class);
+    }
+
+    public function fromClass($class)
+    {
         $annotation = \PMVC\plug('annotation');
         $attrs = $annotation->getAttrs($class);
         $table = \PMVC\value($attrs, ['obj', self::table, 0]);

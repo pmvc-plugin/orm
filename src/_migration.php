@@ -47,7 +47,7 @@ class Migration
         }
         foreach ($files as $f) {
             $r = \PMVC\l($f, _INIT_CONFIG);
-            $class = \PMVC\getExportClass($r);
+            $class = \PMVC\importClass($r);
             $obj = new $class();
             $obj->process($dao);
         }

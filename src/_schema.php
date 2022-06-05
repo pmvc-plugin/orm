@@ -11,20 +11,23 @@ class Schema
         return $this;
     }
 
+    public function fromOneModel($modelData)
+    {
+        extract(\PMVC\assign(['table', 'allColumns'], $modelData));
+        foreach ($allColumns as $col) {
+            $table->addColumn($col);
+        }
+        return $table;
+    }
+
     public function fromModels($modelFiles)
     {
         $schemaMap = new Tables();
         $modelFiles = $this->caller->get_all_files($modelFiles);
         foreach ($modelFiles as $mFile) {
-            extract(
-                \PMVC\assign(
-                    ['table', 'allColumns'],
-                    \PMVC\passByRef($this->caller->parse_model($mFile))
-                )
+            $table = $this->fromOneModel(
+                $this->caller->parse_model()->fromFile($mFile)
             );
-            foreach ($allColumns as $col) {
-                $table->addColumn($col);
-            }
             $schemaMap[$table['TABLE_NAME']] = $table;
         }
         return $schemaMap->toArray();
@@ -45,21 +48,20 @@ class Schema
     {
         $modelSchema = $this->fromModels($modelFiles);
         $migrationSchema = $this->fromMigrations([$migrationFolder]);
-        $tableDiff = $this->caller->diff()->diffAll($modelSchema, $migrationSchema);
+        $tableDiff = $this->caller
+            ->diff()
+            ->diffAll($modelSchema, $migrationSchema);
         $pOrm = $this->caller;
         $newTables = \PMVC\value($tableDiff, ['tables', 'diff', 'left']);
         $delTables = \PMVC\value($tableDiff, ['tables', 'diff', 'right']);
         $colDiffs = \PMVC\get($tableDiff, 'columns');
         $commands = [];
         foreach ($newTables as $tb) {
-            $commands[] = $pOrm
-                ->build_migration()
-                ->buildCreateModel($tb);
+            $commands[] = $pOrm->build_migration()->buildCreateModel($tb);
         }
         foreach ($colDiffs as $tableName => $diffVal) {
-            \PMVC\d(compact('tableName',  'diffVal'));
+            \PMVC\d(compact('tableName', 'diffVal'));
         }
-        
 
         /*
         foreach ($modelSchema as $model) {

@@ -7,16 +7,6 @@ use PMVC\PlugIn\orm\WhereTrait;
 
 class BaseSqlModel
 {
-    use WhereTrait;
-
-    protected function initData($data)
-    {
-        if (is_null($data)) {
-            $data = new DataList();
-        }
-        return $data;
-    }
-
     public function getAll()
     {
         return new DataList($this, 'all');
@@ -31,10 +21,21 @@ class BaseSqlModel
     {
         return new DataList($this, 'var');
     }
+
+    public function getSchema()
+    {
+        $pOrm = \PMVC\plug("orm");
+        $table = $pOrm->schema()->fromOneModel(
+          $pOrm->parse_model()->fromClass($this)
+        );
+        return $table->toArray();
+    }
 }
 
 class DataList extends HashMap
 {
+    use WhereTrait;
+
     private $_model;
     private $_type;
     public function __construct(BaseSqlModel $model, string $type)
