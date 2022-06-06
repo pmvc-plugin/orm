@@ -11,7 +11,7 @@ use DomainException;
 class BuildColumnArray implements Behavior
 {
     // override in db engine
-    public $strAutoIncrement = 'AUTO_INCREMENT';
+    public $transform = [];
 
     public function __construct($table)
     {
@@ -61,7 +61,7 @@ class BuildColumnArray implements Behavior
                 'autoIncrement',
                 [
                   true,
-                  \PMVC\get($this->transform, 'AUTO_INCREMENT')
+                  \PMVC\get($this->transform, 'AUTO_INCREMENT', '')
                 ]
             );
         }

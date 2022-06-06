@@ -7,6 +7,8 @@ use PMVC\PlugIn\orm\WhereTrait;
 
 class BaseSqlModel
 {
+    private $_tableSchema;
+
     public function getAll()
     {
         return new DataList($this, 'all');
@@ -22,13 +24,27 @@ class BaseSqlModel
         return new DataList($this, 'var');
     }
 
-    public function getSchema()
+    public function getTableSchema()
     {
-        $pOrm = \PMVC\plug("orm");
-        $table = $pOrm->schema()->fromOneModel(
-          $pOrm->parse_model()->fromClass($this)
-        );
-        return $table->toArray();
+        if (!$this->_tableSchema) {
+            $pOrm = \PMVC\plug('orm');
+            $this->_tableSchema = $pOrm
+                ->schema()
+                ->fromOneModel($pOrm->parse_model()->fromClass($this));
+        }
+        return $this->_tableSchema;
+    }
+
+    public function getSchemaSql(): string
+    {
+        $tableSchema = $this->getTableSchema();
+        return (string) $tableSchema;
+    }
+
+    public function getSchemaArray(): array
+    {
+        $tableSchema = $this->getTableSchema();
+        return $tableSchema->toArray();
     }
 }
 
@@ -44,4 +60,3 @@ class DataList extends HashMap
         $this->_type = $type;
     }
 }
-
