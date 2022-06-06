@@ -24,7 +24,7 @@ class BaseSqlModel
         return new DataList($this, 'var');
     }
 
-    public function getTableSchema()
+    public function getSchema()
     {
         if (!$this->_tableSchema) {
             $pOrm = \PMVC\plug('orm');
@@ -35,15 +35,21 @@ class BaseSqlModel
         return $this->_tableSchema;
     }
 
+    public function getTableName()
+    {
+        $tableSchema = $this->getSchema();
+        return $tableSchema['TABLE_NAME'];
+    }
+
     public function getSchemaSql(): string
     {
-        $tableSchema = $this->getTableSchema();
+        $tableSchema = $this->getSchema();
         return (string) $tableSchema;
     }
 
     public function getSchemaArray(): array
     {
-        $tableSchema = $this->getTableSchema();
+        $tableSchema = $this->getSchema();
         return $tableSchema->toArray();
     }
 }

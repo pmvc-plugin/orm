@@ -11,4 +11,4 @@ $o = \PMVC\l($model);
 
 $oModel = new (\PMVC\importClass($o));
 
-\PMVC\d($oModel->getSchemaSql());
+\PMVC\d($oModel->getTableName());

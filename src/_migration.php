@@ -53,12 +53,16 @@ class Migration
         }
     }
 
-    public function process($fileOrDir, DAO $oDao = null)
-    {
-        $migrationFiles = $this->caller->get_all_files(
+    public function getAllFiles($fileOrDir) {
+        return $this->caller->get_all_files(
             $fileOrDir,
             '[0-9]*.php'
         );
+    }
+
+    public function process($fileOrDir, DAO $oDao = null)
+    {
+        $migrationFiles = $this->getAllFiles($fileOrDir);
         if (is_null($oDao)) {
             $oDao = $this->caller->dao()->getDefault();
         }
