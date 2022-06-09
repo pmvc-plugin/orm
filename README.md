@@ -27,3 +27,6 @@ orm
 #### 2.2 Or use composer command-line
    * php composer.phar require pmvc-plugin/orm
 
+
+## Adminer
+https://www.adminer.org/
