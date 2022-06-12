@@ -42,8 +42,8 @@ class ParseModel
             $allColumns[$oField->name] = $oField;
         }
         foreach ($cols as $col) {
-            $allColumns[$col->name] = $col;
             $colMap[$col->name] = $col;
+            $allColumns[$col->name] = $col;
         }
         return compact(
             'table',

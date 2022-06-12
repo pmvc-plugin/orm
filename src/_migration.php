@@ -7,6 +7,11 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Migration';
 use PMVC\PlugIn\orm\Fields\CharField;
 use PMVC\PlugIn\orm\Fields\DateTimeField;
 
+// model
+use PMVC\PlugIn\orm\BaseSqlModel;
+use PMVC\PlugIn\orm\Attrs\Table;
+use PMVC\PlugIn\orm\Attrs\Field;
+
 class Migration
 {
     private $_recorder;
@@ -71,7 +76,11 @@ class Migration
     }
 }
 
-class MigrationRecorder
+#[Table()] 
+#[Field("prefix", "CharField", ['MAX_LENGTH' => 255])] 
+#[Field("name", "CharField", ['MAX_LENGTH' => 255])] 
+#[Field("applied", "DateTimeField", ['default' => 'NOW'])] 
+class MigrationRecorder extends BaseSqlModel
 {
     private $_tableName = 'pmvc_migrations';
 
@@ -79,21 +88,9 @@ class MigrationRecorder
     {
         $remote = \PMVC\plug('orm')->remote();
         if (!$remote->exists($this->_tableName)) {
-            $table = $remote->create($this->_tableName);
-            $defineds = $this->getTableDefineds();
-            foreach ($defineds as $col) {
-                $table->addColumn($col);
-            }
+            $table = $remote->create($this);
+            $table->setTableName($this->_tableName);
             $table->commit()->process();
         }
-    }
-
-    public function getTableDefineds()
-    {
-        return [
-            new CharField('prefix', ['MAX_LENGTH' => 255]),
-            new CharField('name', ['MAX_LENGTH' => 255]),
-            new DateTimeField('applied', ['default' => 'NOW']),
-        ];
     }
 }

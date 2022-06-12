@@ -85,7 +85,7 @@ class BuildColumnArray implements Behavior
 
     protected function processBase()
     {
-        $columns = $this->_table['TABLE_COLUMNS'];
+        $columns = \PMVC\toArray($this->_table['TABLE_COLUMNS']);
         $primary =
             $this->_table['PRIMARY'] && count($this->_table['PRIMARY'])
                 ? $this->_table['PRIMARY']

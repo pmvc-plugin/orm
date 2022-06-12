@@ -1,7 +1,7 @@
 <?php
 
 namespace PMVC\PlugIn\orm\Fields;
-use PMVC\PlugIn\orm\Attrs\BaseText;
+use PMVC\PlugIn\orm\Fields\BaseText;
 
 #[Attribute]
 class CharField extends BaseText

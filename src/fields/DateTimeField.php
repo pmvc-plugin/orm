@@ -1,10 +1,9 @@
 <?php
 
 namespace PMVC\PlugIn\orm\Fields;
-use PMVC\PlugIn\orm\Attrs\Field;
 
 #[Attribute]
-class DateTimeField extends Field
+class DateTimeField extends BaseField
 {
     public $fieldType = 'DateTimeField';
 

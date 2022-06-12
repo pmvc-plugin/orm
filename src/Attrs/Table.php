@@ -14,7 +14,7 @@ class Table extends HashMap
 
     private $_dao;
 
-    public function __construct($v, Dao $dao = null)
+    public function __construct($v = [], Dao $dao = null)
     {
         if (is_string($v)) {
             $v = ['TABLE_NAME' => $v];
@@ -22,15 +22,29 @@ class Table extends HashMap
         if (!is_null($dao)) {
             $this->setDao($dao);
         }
-        parent::__construct($v);
+        parent::__construct($v); // for trigger getInitialState()
     }
 
-    public function setDao(Dao $dao)
+    protected function getInitialState()
+    {
+        return [
+            'TABLE_COLUMNS' => [],
+        ];
+    }
+
+    public function setTableName(string $name) : Table
+    {
+        $this['TABLE_NAME'] = $name;
+        return $this;
+    }
+
+    public function setDao(Dao $dao) : Table
     {
         $this->_dao = $dao;
+        return $this;
     }
 
-    public function column($name, $type, array $columnOptions = [])
+    public function column($name, $type, array $columnOptions = []) : Table
     {
         switch ($type) {
             default:
@@ -48,12 +62,6 @@ class Table extends HashMap
         }
     }
 
-    protected function getInitialState()
-    {
-        return [
-            'TABLE_COLUMNS' => [],
-        ];
-    }
 
     public function getAllRequired()
     {
@@ -70,7 +78,7 @@ class Table extends HashMap
         return array_merge($this->getAllRequired(), $this->getAllOptional());
     }
 
-    public function commit()
+    public function commit() : DAO
     {
         if (empty($this->_dao)) {
             throw new DomainException('Not setup dao, use setDao to do it.');
@@ -78,14 +86,14 @@ class Table extends HashMap
         return $this->_dao->commit($this->__toString(), $this->getBindData());
     }
 
-    public function toArray()
+    public function toArray() : array
     {
         return \PMVC\plug('orm')
             ->behavior()
             ->tableToArray($this);
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return \PMVC\plug('orm')
             ->behavior()

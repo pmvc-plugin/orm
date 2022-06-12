@@ -25,7 +25,7 @@ class StructureDAO extends DAO
         return $this->_tables->toArray();
     }
 
-    public function commit($sql, array $prepare = [])
+    public function commit($sql, array $prepare = []) : DAO
     {
         return $this;
     }

@@ -15,7 +15,7 @@ class DAO
     private $_history = [];
     private $_queue = [];
 
-    public function commit($sql, array $prepare = [])
+    public function commit($sql, array $prepare = []) : DAO
     {
         $this->_queue[] = [$sql, $prepare];
         return $this;

@@ -11,7 +11,7 @@ class Field
 
     public function __construct(
         string $name,
-        string $type,
+        string $type = null,
         array $columnOptions = []
     ) {
         $namespace = 'PMVC\PlugIn\orm\Fields';

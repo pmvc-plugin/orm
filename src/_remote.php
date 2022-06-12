@@ -4,7 +4,8 @@ namespace PMVC\PlugIn\orm;
 
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\RemoteActions';
 
-use PMVC\PlugIn\orm\Attrs\Table;
+use PMVC\PlugIn\orm\BaseSqlModel;
+use DomainException;
 
 class RemoteActions
 {
@@ -13,9 +14,23 @@ class RemoteActions
         return $this;
     }
 
-    public function create($tableName)
+    public function getDao()
     {
-        return $this->caller->dao()->getDefault()->createModel($tableName);
+        return $this->caller->dao()->getDefault();
+    }
+
+    public function create($tableNameOrModel)
+    {
+        $dao = $this->getDao();
+        if ($tableNameOrModel instanceof BaseSqlModel) {
+            $table = $tableNameOrModel->getSchema();
+            $table->setDao($dao);
+        } elseif (is_string($tableNameOrModel)) {
+            $table = $dao->createModel($tableNameOrModel);
+        } else {
+            throw new DomainException('Not provide a correct table.');
+        }
+        return $table;
     }
 
     public function exists($tableName)
