@@ -17,7 +17,6 @@ const THIS_PLUGIN = 'orm';
 
 class orm extends PlugIn
 {
-
     public function init()
     {
     }
@@ -51,8 +50,11 @@ class orm extends PlugIn
         return $content;
     }
 
-    public function useTpl($tplKey, array $keys, $values = null)
-    {
+    public function useTpl(
+        string $tplKey,
+        array $keys,
+        array|ArrayAccess|null $values = null
+    ): string {
         $tplContent = $this->getTpl($tplKey);
         $res = \PMVC\tplArrayReplace($tplContent, $keys, $values);
         return $res;

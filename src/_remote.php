@@ -33,7 +33,7 @@ class RemoteActions
         return $table;
     }
 
-    public function exists($tableName)
+    public function exists($tableName): bool
     {
         return $this->caller->behavior()->tableExists($tableName);
     }

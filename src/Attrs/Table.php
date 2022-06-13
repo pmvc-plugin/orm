@@ -32,43 +32,42 @@ class Table extends HashMap
         ];
     }
 
-    public function setTableName(string $name) : Table
+    public function setTableName(string $name): Table
     {
         $this['TABLE_NAME'] = $name;
         return $this;
     }
 
-    public function setDao(Dao $dao) : Table
+    public function setDao(Dao $dao): Table
     {
         $this->_dao = $dao;
         return $this;
     }
 
-    public function column($name, $type, array $columnOptions = []) : Table
+    public function column($name, $type, array $columnOptions = []): Table
     {
         switch ($type) {
             default:
                 $nextColumn = new Column($name, $type, $columnOptions);
                 break;
         }
-        $this->addColumn($nextColumn);
-        return $this;
+        return $this->addColumn($nextColumn);
     }
 
-    public function addColumn(Column $column)
+    public function addColumn(Column $column): Table
     {
         if ($column->verifySpec()) {
             $this['TABLE_COLUMNS'][$column->name] = $column;
         }
+        return $this;
     }
 
-
-    public function getAllRequired()
+    public function getAllRequired(): array
     {
         return ['TABLE_NAME', 'TABLE_COLUMNS'];
     }
 
-    public function getAllOptional()
+    public function getAllOptional(): array
     {
         return ['PRIMARY_KEY'];
     }
@@ -78,7 +77,7 @@ class Table extends HashMap
         return array_merge($this->getAllRequired(), $this->getAllOptional());
     }
 
-    public function commit() : DAO
+    public function commit(): DAO
     {
         if (empty($this->_dao)) {
             throw new DomainException('Not setup dao, use setDao to do it.');
@@ -86,14 +85,14 @@ class Table extends HashMap
         return $this->_dao->commit($this->__toString(), $this->getBindData());
     }
 
-    public function toArray() : array
+    public function toArray(): array
     {
         return \PMVC\plug('orm')
             ->behavior()
             ->tableToArray($this);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return \PMVC\plug('orm')
             ->behavior()

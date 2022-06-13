@@ -37,7 +37,7 @@ class RawSql extends HashMap
         return $this;
     }
 
-    public function commit($type = null)
+    public function process($type = null)
     {
         $pdo = \PMVC\plug('orm')->pdo();
         $bindData = $this->getBindData();

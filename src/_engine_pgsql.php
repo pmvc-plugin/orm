@@ -94,7 +94,7 @@ class PgsqlEngine extends Engine
         table_name = {$oSql->getBindName($behavior->params)} 
   );
 EOF;
-        $result = $oSql->set($sql)->commit('one');
+        $result = $oSql->set($sql)->process('one');
         $behavior->setExists(!empty($result['exists']));
         return $behavior;
     }

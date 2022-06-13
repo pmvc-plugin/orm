@@ -45,11 +45,17 @@ class Migration
         }
     }
 
-    private function _processEach($files, DAO $dao)
+    public function getRecorder(): MigrationRecorder
     {
         if (empty($this->_recorder)) {
             $this->_recorder = new MigrationRecorder();
         }
+        return $this->_recorder;
+    }
+
+    private function _processEach($files, DAO $dao)
+    {
+        $this->getRecorder();
         foreach ($files as $f) {
             $r = \PMVC\l($f, _INIT_CONFIG);
             $class = \PMVC\importClass($r);
@@ -58,11 +64,9 @@ class Migration
         }
     }
 
-    public function getAllFiles($fileOrDir) {
-        return $this->caller->get_all_files(
-            $fileOrDir,
-            '[0-9]*.php'
-        );
+    public function getAllFiles($fileOrDir)
+    {
+        return $this->caller->get_all_files($fileOrDir, '[0-9]*.php');
     }
 
     public function process($fileOrDir, DAO $oDao = null)
@@ -76,10 +80,10 @@ class Migration
     }
 }
 
-#[Table()] 
-#[Field("prefix", "CharField", ['MAX_LENGTH' => 255])] 
-#[Field("name", "CharField", ['MAX_LENGTH' => 255])] 
-#[Field("applied", "DateTimeField", ['default' => 'NOW'])] 
+#[Table()]
+#[Field("prefix", "CharField", ['MAX_LENGTH' => 255])]
+#[Field("name", "CharField", ['MAX_LENGTH' => 255])]
+#[Field("applied", "DateTimeField", ['default' => 'NOW'])]
 class MigrationRecorder extends BaseSqlModel
 {
     private $_tableName = 'pmvc_migrations';
@@ -87,10 +91,11 @@ class MigrationRecorder extends BaseSqlModel
     public function __construct()
     {
         $remote = \PMVC\plug('orm')->remote();
+        $table = $this->getSchema();
+        // should always reset table name
+        $table->setTableName($this->_tableName);
         if (!$remote->exists($this->_tableName)) {
-            $table = $remote->create($this);
-            $table->setTableName($this->_tableName);
-            $table->commit()->process();
+            $remote->create($this)->commit()->process();
         }
     }
 }

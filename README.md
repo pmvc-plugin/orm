@@ -30,3 +30,7 @@ orm
 
 ## Adminer
 https://www.adminer.org/
+
+## Commit vs Process
+commit -> put command to queue
+process -> actual run.
