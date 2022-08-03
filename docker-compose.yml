@@ -16,7 +16,6 @@ services:
     working_dir: /var/www/html/orm/demos
     depends_on:
     - pgsql
-    - mysql
     volumes:
     - ./:/var/www/html/orm:delegated
   adminer:
@@ -26,3 +25,4 @@ services:
     volumes:
     - ./demos/test.sqlite:/tmp/test.sqlite:delegated
     - ./docker/login.php:/var/www/html/plugins-enabled/login.php:delegated
+

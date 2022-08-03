@@ -5,6 +5,7 @@ namespace PMVC\PlugIn\orm;
 ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\orm';
 
 use PMVC\PlugIn;
+use ArrayAccess;
 
 const SQLITE = 'sqlite';
 const MYSQL = 'mysql';

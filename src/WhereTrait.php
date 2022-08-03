@@ -7,8 +7,7 @@ trait WhereTrait
     private $_where;
     private $_whereType;
 
-
-    protected setWhere($op, $col, $val)
+    protected function setWhere($op, $col, $val)
     {
         $this->_where[] = [$op, $col, $val];
     }
