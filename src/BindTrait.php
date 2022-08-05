@@ -8,7 +8,6 @@ namespace PMVC\PlugIn\orm;
 trait BindTrait 
 {
     private $_bindData = [];
-    protected $bindKey;
 
     private function _getBindNum()
     {
@@ -16,10 +15,10 @@ trait BindTrait
         return $i++;
     }
 
-    public function getBindName($v)
+    public function getBindName($v, $name='')
     {
         $num = $this->_getBindNum();
-        $keyName = $this->bindKey.'_'.$num;
+        $keyName = $name.'_'.$num;
         $this->_bindData[$keyName] = $v;
         return ':'.$keyName;
     }

@@ -17,6 +17,13 @@ $orm = \PMVC\plug("orm", [
 
 $orm->setEngine();
 $recorder = $orm->migration()->getRecorder();
-$result = $recorder->getVar('name')->process();
+// $result = $recorder->getVar('name')->process();
+
+$result = $recorder->create([
+  'prefix' => 'tp',
+  'name' => 'tn',
+  'applied' => date('Y-m-d H:i:s')  
+])->process();
+
 
 \PMVC\d($result);

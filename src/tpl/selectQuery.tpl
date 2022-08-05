@@ -1,1 +1,1 @@
-select [FIELD] from [FROM] [WHERE] [GROUP_BY] [ORDER_BY] [LIMIT] 
+select [FIELD] from [TABLE] [WHERE] [GROUP_BY] [ORDER_BY] [LIMIT] 
