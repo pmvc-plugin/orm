@@ -19,11 +19,13 @@ $orm->setEngine();
 $recorder = $orm->migration()->getRecorder();
 // $result = $recorder->getVar('name')->process();
 
-$result = $recorder->create([
-  'prefix' => 'tp',
-  'name' => 'tn',
-  'applied' => date('Y-m-d H:i:s')  
+/*
+$recorder->create([
+  "name"=>"abc",
+  "prefix"=>"ddd",
+  "applied"=>date("Y-m-d H:i:s")
 ])->process();
+ */
 
-
-\PMVC\d($result);
+$run = $recorder->delete(6);
+\PMVC\d($run->process());

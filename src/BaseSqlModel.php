@@ -2,13 +2,21 @@
 
 namespace PMVC\PlugIn\orm;
 
-use PMVC\HashMap;
-use PMVC\PlugIn\orm\WhereTrait;
+use PMVC\PlugIn\orm\crud\WhereTrait;
+use PMVC\PlugIn\orm\crud\Create;
+use PMVC\PlugIn\orm\crud\Read;
+use PMVC\PlugIn\orm\crud\Update;
+use PMVC\PlugIn\orm\crud\Delete;
 use PMVC\PlugIn\orm\Attrs\Table;
 
 class BaseSqlModel
 {
     private $_tableSchema;
+
+    public function create($data): Create
+    {
+        return new Create($this, '', ['data' => $data]);
+    }
 
     public function getAll(): Read
     {
@@ -25,17 +33,18 @@ class BaseSqlModel
         return new Read($this, 'var', ['key' => $key]);
     }
 
-    public function create($data): Create
+    public function update($data): Update
     {
-        return new Create($this, '', ['data' => $data]);
+      return new Update($this, '', [
+        'data' => $data
+      ]);
     }
 
-    public function update(): Update
+    public function delete($id): Delete
     {
-    }
-
-    public function delete(): Delete
-    {
+      return new Delete($this, '', [
+        'id' => $id
+      ]);
     }
 
     public function getSchema(): Table
@@ -81,101 +90,7 @@ class BaseSqlModel
     }
 }
 
-class Result extends HashMap
-{
-    protected $_model;
-    protected $_type;
-    protected $_fields = '*';
-    protected $_options = [];
-    public function __construct(
-        BaseSqlModel $model,
-        string $type,
-        array|null $options = null
-    ) {
-        $this->_model = $model;
-        $this->_type = $type;
-        if (!empty($options)) {
-          $this->_options = $options;
-        }
-    }
-}
 
-class Create extends Result
-{
-    /**
-     * https://www.w3schools.com/sql/sql_insert.asp
-     *
-     * INSERT INTO
-     */
-    public function process()
-    {
-        $m = $this->_model;
-        $cols = $m->getColumnKeys();
-        $values = [];
-        $data = $this->_options['data'];
-        $oSql = \PMVC\plug('orm')->sql();
-        foreach($cols as $col) {
-          $values[] = $oSql->getBindName($data[$col], $col);  
-        }
-        
-        $sql = \PMVC\plug('orm')->useTpl('insert', [
-            'TABLE' => $m->getTableName(),
-            'FIELD_KEYS' => implode(', ', $cols),
-            'FIELD_VALUES' => implode(', ', $values),
-        ]);
-        $result = $oSql->set($sql)->process("exec");
 
-        \PMVC\d(compact('cols', 'sql', 'result'));
-    }
-}
 
-class Read extends Result
-{
-    use WhereTrait;
 
-    public function __construct(
-        BaseSqlModel $model,
-        string $type,
-        array|null $options = null
-    ) {
-        parent::__construct($model, $type, $options);
-        if ('var' === $type) {
-            $this->_fields = $options['key'];
-        }
-    }
-
-    /**
-     * https://www.w3schools.com/sql/
-     *
-     * SELECT
-     * https://www.sqlite.org/lang_select.html
-     */
-    public function process()
-    {
-        $m = $this->_model;
-        $oSql = \PMVC\plug('orm')->sql();
-        $sql = \PMVC\plug('orm')->useTpl('selectQuery', [
-            'FIELD' => $this->_fields,
-            'TABLE' => $m->getTableName(),
-            'WHERE' => '',
-            'GROUP_BY' => '',
-            'ORDER_BY' => '',
-            'LIMIT' => '',
-        ]);
-
-        $execType = 'var' === $this->_type ? 'one' : $this->_type;
-        $result = $oSql->set($sql)->process($execType);
-        if ('var' === $this->_type) {
-            $result = \PMVC\get($result, $this->_fields);
-        }
-        return $result;
-    }
-}
-
-class Update extends Result
-{
-}
-
-class Delete extends Result
-{
-}

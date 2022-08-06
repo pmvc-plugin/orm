@@ -1,11 +1,11 @@
 <?php
 
-namespace PMVC\PlugIn\orm;
+namespace PMVC\PlugIn\orm\crud;
 
 trait WhereTrait
 {
     private $_where;
-    private $_whereType;
+    private $_whereType = 'AND';
 
     protected function setWhere($op, $col, $val)
     {
@@ -91,5 +91,25 @@ trait WhereTrait
     public function setMultiFilter($opList)
     {
         return $this;
+    }
+
+    public function getWhere($oSql)
+    {
+        $resultArr = [];
+        if (is_array($this->_where)) {
+            foreach ($this->_where as $w) {
+                switch ($w[0]) {
+                    case 'exact':
+                        $bindKey = $oSql->getBindName($w[2], $w[1]);
+                        $resultArr[] = $w[1] . '=' . $bindKey;
+                        break;
+                }
+            }
+        }
+        $sWhere = '';
+        if (count($resultArr)) {
+            $sWhere = 'where ' . implode($this->_whereType, $resultArr);
+        }
+        return $sWhere;
     }
 }

@@ -13,6 +13,7 @@ use PMVC\PlugIn\orm\Behaviors\BuildColumnArray;
 use PMVC\PlugIn\orm\Behaviors\BuildDsn;
 use PMVC\PlugIn\orm\Behaviors\CheckTableExists;
 use PMVC\PlugIn\orm\Behaviors\GetColumnType;
+use PMVC\PlugIn\orm\Behaviors\GetSequenceResetSql;
 use DomainException;
 
 class BehaviorAction
@@ -73,6 +74,13 @@ class BehaviorAction
     public function buildDsn()
     {
         $res = $this->compile([new BuildDsn()]);
+
+        return end($res);
+    }
+
+    public function getSequenceResetSql()
+    {
+        $res = $this->compile([new GetSequenceResetSql()]);
 
         return end($res);
     }
