@@ -6,6 +6,8 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Schema';
 
 class Schema
 {
+    public $caller;
+
     public function __invoke()
     {
         return $this;
@@ -40,10 +42,6 @@ class Schema
         return $oDao->toArray();
     }
 
-    public function fromDb()
-    {
-    }
-
     public function diffFromModelToMigration($modelFiles, $migrationFolder = '')
     {
         $modelSchema = $this->fromModels($modelFiles);
@@ -52,34 +50,79 @@ class Schema
             ->diff()
             ->diffAll($modelSchema, $migrationSchema);
         $pOrm = $this->caller;
+        $builder = $pOrm->build_migration();
         $newTables = \PMVC\value($tableDiff, ['tables', 'diff', 'left']);
         $delTables = \PMVC\value($tableDiff, ['tables', 'diff', 'right']);
         $colDiffs = \PMVC\get($tableDiff, 'columns');
         $commands = [];
-        foreach ($newTables as $tb) {
-            $commands[] = $pOrm->build_migration()->buildCreateModel($tb);
-        }
-        foreach ($colDiffs as $tableName => $diffVal) {
-            \PMVC\d(compact('tableName', 'diffVal'));
+        $reverseCommands = [];
+
+        // New tables → createModel (reverse: deleteModel)
+        foreach ($newTables ?? [] as $tableName => $tb) {
+            $commands[] = $builder->buildCreateModel($tb);
+            $reverseCommands[] = $builder->buildDeleteModel($tableName);
         }
 
-        /*
-        foreach ($modelSchema as $model) {
-            $upCommand = $pOrm
-                ->build_migration()
-                ->buildCreateModel($model->toArray());
-            $this->writeMigration(
-                [
-                    'MIGRATION_DEP' => '',
-                    'MIGRATION_PROCESS' => $upCommand,
-                ],
-                $migrationFolder
-            );
+        // Column diffs for existing tables
+        foreach ($colDiffs ?? [] as $tableName => $diffVal) {
+            // Added columns (reverse: removeField)
+            $addedCols = \PMVC\value($diffVal, ['diff', 'left']);
+            if (!empty($addedCols)) {
+                foreach ($addedCols as $colName => $colData) {
+                    $commands[] = $builder->buildAddField($tableName, $colData);
+                    $reverseCommands[] = $builder->buildRemoveField($tableName, $colName);
+                }
+            }
+
+            // Removed columns (reverse: addField)
+            $removedCols = \PMVC\value($diffVal, ['diff', 'right']);
+            if (!empty($removedCols)) {
+                foreach ($removedCols as $colName => $colData) {
+                    $commands[] = $builder->buildRemoveField($tableName, $colName);
+                    $reverseCommands[] = $builder->buildAddField($tableName, $colData);
+                }
+            }
+
+            // Changed columns (reverse: alterField with old values)
+            $changedCols = \PMVC\get($diffVal, 'change');
+            if (!empty($changedCols)) {
+                foreach ($changedCols as $colName => $colData) {
+                    $commands[] = $builder->buildAlterField($tableName, $colData['left']);
+                    $reverseCommands[] = $builder->buildAlterField($tableName, $colData['right']);
+                }
+            }
         }
-        */
+
+        // Deleted tables → deleteModel (reverse: createModel)
+        if (!empty($delTables)) {
+            foreach ($delTables as $tableName => $tableData) {
+                $commands[] = $builder->buildDeleteModel($tableName);
+                $reverseCommands[] = $builder->buildCreateModel($tableData);
+            }
+        }
+
+        return [
+            'commands' => $commands,
+            'reverse' => $reverseCommands,
+        ];
     }
 
-    public function diffFromDbToMigration()
+    public function fromDb()
     {
+        $pOrm = $this->caller;
+        $engine = $pOrm->behavior()->getEngine();
+        if (!$engine) {
+            return [];
+        }
+        return $engine->introspectSchema();
+    }
+
+    public function diffFromDbToMigration($migrationFolder = '')
+    {
+        $dbSchema = $this->fromDb();
+        $migrationSchema = $this->fromMigrations([$migrationFolder]);
+        return $this->caller
+            ->diff()
+            ->diffAll($dbSchema, $migrationSchema);
     }
 }

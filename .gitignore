@@ -8,3 +8,5 @@ demos/migrations
 test.sqlite
 src/_test*
 *.json
+.claude
+.phpunit.cache

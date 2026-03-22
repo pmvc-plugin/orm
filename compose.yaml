@@ -1,7 +1,6 @@
-version: "3"
 services:
   pgsql:
-    image: postgres:11
+    image: postgres:18
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
 #  mysql:
@@ -12,8 +11,9 @@ services:
 #      MYSQL_USER: mysql
 #      MYSQL_PASSWORD: mysql
   php:
-    image: hillliu/pmvc-phpunit:8.1
+    image: allfunc/pmvc-phpunit:8.5
     working_dir: /var/www/html/orm/demos
+    command: sleep infinity
     depends_on:
     - pgsql
     volumes:

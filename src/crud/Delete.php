@@ -26,7 +26,6 @@ class Delete extends Result
             'TABLE' => $m->getTableName(),
             'WHERE' => $this->getWhere($oSql),
         ]);
-        var_dump($sql);
         $result = $oSql->set($sql)->process("exec");
         return $result;
     }

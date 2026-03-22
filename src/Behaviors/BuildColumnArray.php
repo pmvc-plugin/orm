@@ -12,6 +12,7 @@ class BuildColumnArray implements Behavior
 {
     // override in db engine
     public $transform = [];
+    protected $_table;
 
     public function __construct($table)
     {
@@ -48,7 +49,7 @@ class BuildColumnArray implements Behavior
                     $this->setRow($row, 'primaryKey', [true, 'PRIMARY KEY']);
                 }
             } else {
-                if (in_array($colName, $primary)) {
+                if (in_array($rowName, $primary)) {
                     $keep['primaryArr'][] = $rowName;
                 }
             }
@@ -90,7 +91,7 @@ class BuildColumnArray implements Behavior
             $this->_table['PRIMARY'] && count($this->_table['PRIMARY'])
                 ? $this->_table['PRIMARY']
                 : null;
-        $keep = new HashMap(['primaryArr' => [], 'hasPrimary' => false]);
+        $keep = new HashMap(['primaryArr' => [], 'hasPrimary' => !is_null($primary)]);
         $allRowSeq = [];
         $allRowMap = [];
         foreach ($columns as $col) {
@@ -106,7 +107,7 @@ class BuildColumnArray implements Behavior
         extract(\PMVC\assign(['hasPrimary', 'primaryArr'], \PMVC\get($keep)));
         if (!$hasPrimary) {
             if (isset($allRowMap['id'])) {
-                throw DomainException(
+                throw new DomainException(
                     'You need handle primaryKey by yourself when id column exists'
                 );
             }

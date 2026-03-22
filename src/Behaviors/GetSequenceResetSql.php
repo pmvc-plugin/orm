@@ -6,8 +6,10 @@ use PMVC\PlugIn\orm\Interfaces\Behavior;
 use PMVC\PlugIn\orm\Engine;
 use PMVC\PlugIn\orm;
 
-class GetSequenceResetSql implements Behavior 
+class GetSequenceResetSql implements Behavior
 {
+    private $_engine;
+
     public function accept(Engine $engine)
     {
         $this->_engine = $engine;

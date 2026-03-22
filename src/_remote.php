@@ -9,6 +9,8 @@ use DomainException;
 
 class RemoteActions
 {
+    public $caller;
+
     public function __invoke()
     {
         return $this;

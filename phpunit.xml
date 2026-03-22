@@ -1,24 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-   backupStaticAttributes="false"
-   colors="true"
-   bootstrap="tests/include.php"
-   convertErrorsToExceptions="true"
-   convertNoticesToExceptions="true"
-   convertWarningsToExceptions="true"
-   processIsolation="false"
-   stopOnFailure="false"
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
+  backupGlobals="false"
+  bootstrap="tests/include.php"
+  colors="true"
+  processIsolation="false"
+  stopOnFailure="false"
+  cacheDirectory=".phpunit.cache"
+  backupStaticProperties="false"
+  failOnPhpunitDeprecation="false"
 >
-    <testsuites>
-        <testsuite name="Application Test Suite">
-            <directory>./tests/</directory>
-            <file>./tests/test.php</file>
-        </testsuite>
-    </testsuites>
-    <php>
-        <ini name="error_reporting" value="E_ALL"/>
-        <ini name="display_errors" value="true"/>
-        <ini name="display_startup_errors" value="true"/>
-        <env name="APP_ENV" value="testing"/>
-    </php>
+  <source>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </source>
+  <testsuites>
+    <testsuite name="Application Test Suite">
+      <directory>./tests/</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <ini name="error_reporting" value="E_ALL" />
+    <ini name="display_errors" value="true" />
+    <ini name="display_startup_errors" value="true" />
+    <env name="APP_ENV" value="testing" />
+  </php>
+  <logging>
+    <junit outputFile="/tmp/test_output/junit.xml" />
+  </logging>
 </phpunit>

@@ -18,4 +18,9 @@ class Migration implements MigrationInterface
     {
 [MIGRATION_PROCESS]
     }
+
+    public function reverse(DAO $dao)
+    {
+[MIGRATION_REVERSE]
+    }
 }

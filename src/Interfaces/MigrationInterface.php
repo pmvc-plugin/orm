@@ -4,8 +4,9 @@ namespace PMVC\PlugIn\orm\Interfaces;
 
 use PMVC\PlugIn\orm\DAO;
 
-interface MigrationInterface 
+interface MigrationInterface
 {
     public function dependencies();
     public function process(DAO $dao);
+    public function reverse(DAO $dao);
 }

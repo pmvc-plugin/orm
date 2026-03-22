@@ -14,6 +14,16 @@ use PMVC\PlugIn\orm\Behaviors\BuildDsn;
 use PMVC\PlugIn\orm\Behaviors\CheckTableExists;
 use PMVC\PlugIn\orm\Behaviors\GetColumnType;
 use PMVC\PlugIn\orm\Behaviors\GetSequenceResetSql;
+use PMVC\PlugIn\orm\Behaviors\BuildDropTable;
+use PMVC\PlugIn\orm\Behaviors\BuildAddColumn;
+use PMVC\PlugIn\orm\Behaviors\BuildDropColumn;
+use PMVC\PlugIn\orm\Behaviors\BuildAlterColumn;
+use PMVC\PlugIn\orm\Behaviors\BuildRenameColumn;
+use PMVC\PlugIn\orm\Behaviors\BuildRenameTable;
+use PMVC\PlugIn\orm\Behaviors\BuildCreateIndex;
+use PMVC\PlugIn\orm\Behaviors\BuildDropIndex;
+use PMVC\PlugIn\orm\Behaviors\BuildAddConstraint;
+use PMVC\PlugIn\orm\Behaviors\BuildDropConstraint;
 use DomainException;
 
 class BehaviorAction
@@ -25,7 +35,7 @@ class BehaviorAction
         $this->_engine = new Engine();
     }
 
-    public function __invoke(Engine $engine = null)
+    public function __invoke(?Engine $engine = null)
     {
         if (!is_null($engine)) {
             $this->_engine = $engine;
@@ -85,7 +95,72 @@ class BehaviorAction
         return end($res);
     }
 
-    public function compile(array $behaviors, Engine $engine = null)
+    public function getEngine(): Engine
+    {
+        return $this->_engine;
+    }
+
+    public function dropTable(string $tableName)
+    {
+        $res = $this->compile([new BuildDropTable($tableName)]);
+        return end($res);
+    }
+
+    public function addColumn(string $tableName, string $fieldName, string $fieldType, array $options = [])
+    {
+        $res = $this->compile([new BuildAddColumn($tableName, $fieldName, $fieldType, $options)]);
+        return end($res);
+    }
+
+    public function dropColumn(string $tableName, string $fieldName)
+    {
+        $res = $this->compile([new BuildDropColumn($tableName, $fieldName)]);
+        return end($res);
+    }
+
+    public function alterColumn(string $tableName, string $fieldName, string $newType, array $options = [])
+    {
+        $res = $this->compile([new BuildAlterColumn($tableName, $fieldName, $newType, $options)]);
+        return end($res);
+    }
+
+    public function renameColumn(string $tableName, string $oldName, string $newName)
+    {
+        $res = $this->compile([new BuildRenameColumn($tableName, $oldName, $newName)]);
+        return end($res);
+    }
+
+    public function renameTable(string $oldTableName, string $newTableName)
+    {
+        $res = $this->compile([new BuildRenameTable($oldTableName, $newTableName)]);
+        return end($res);
+    }
+
+    public function createIndex(string $tableName, string $indexName, array $columns, bool $unique = false)
+    {
+        $res = $this->compile([new BuildCreateIndex($tableName, $indexName, $columns, $unique)]);
+        return end($res);
+    }
+
+    public function dropIndex(string $indexName)
+    {
+        $res = $this->compile([new BuildDropIndex($indexName)]);
+        return end($res);
+    }
+
+    public function addConstraint(string $tableName, string $constraintName, string $constraintDef)
+    {
+        $res = $this->compile([new BuildAddConstraint($tableName, $constraintName, $constraintDef)]);
+        return end($res);
+    }
+
+    public function dropConstraint(string $tableName, string $constraintName)
+    {
+        $res = $this->compile([new BuildDropConstraint($tableName, $constraintName)]);
+        return end($res);
+    }
+
+    public function compile(array $behaviors, ?Engine $engine = null)
     {
         if (is_null($engine)) {
             $engine = $this->_engine;

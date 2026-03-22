@@ -10,11 +10,12 @@ class GetColumnType implements Behavior
     public $params;
     private $_types;
 
-    public function __construct($fieldType, $options)
+    public function __construct($fieldType, $options, $setter = null)
     {
         $this->params = [
             'fieldType' => $fieldType,
             'options' => $options,
+            'setter' => $setter,
         ];
     }
 

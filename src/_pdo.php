@@ -13,6 +13,7 @@ use PMVC\PlugIn\orm\DAO;
 
 class PDOWrap
 {
+    public $caller;
     private $_pdo;
     private $_dsn;
     private $_lastState;

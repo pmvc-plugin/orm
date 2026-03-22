@@ -47,6 +47,56 @@ class BaseSqlModel
       ]);
     }
 
+    /**
+     * Django-style filter shortcut — returns a chainable Read query.
+     * e.g. $model->filter('status', 'active')->orderBy('-created_at')->limit(10)->process()
+     */
+    public function filter(string $fieldOrLookup, $value): Read
+    {
+        return (new Read($this, 'all'))->filter($fieldOrLookup, $value);
+    }
+
+    /**
+     * Multi-row INSERT in batches.
+     */
+    public function bulkCreate(array $objects, int $batchSize = 100): void
+    {
+        $cols = $this->getColumnKeys();
+        foreach (array_chunk($objects, $batchSize) as $batch) {
+            $oSql = \PMVC\plug('orm')->sql();
+            $valueGroups = [];
+            foreach ($batch as $data) {
+                $placeholders = [];
+                foreach ($cols as $col) {
+                    $placeholders[] = $oSql->getBindName($data[$col] ?? null, $col);
+                }
+                $valueGroups[] = '(' . implode(', ', $placeholders) . ')';
+            }
+            $sql = \PMVC\plug('orm')->useTpl('bulkInsert', [
+                'TABLE' => $this->getTableName(),
+                'FIELD_KEYS' => implode(', ', $cols),
+                'FIELD_VALUES' => implode(', ', $valueGroups),
+            ]);
+            $oSql->set($sql)->process('exec');
+        }
+    }
+
+    /**
+     * Batched UPDATE for a list of objects. Each object must have an 'id'.
+     * Only $fields columns are updated.
+     */
+    public function bulkUpdate(array $objects, array $fields, int $batchSize = 100): void
+    {
+        foreach (array_chunk($objects, $batchSize) as $batch) {
+            foreach ($batch as $data) {
+                $filtered = array_intersect_key($data, array_flip($fields));
+                if (!empty($filtered) && isset($data['id'])) {
+                    $this->update($filtered)->exact('id', $data['id'])->process();
+                }
+            }
+        }
+    }
+
     public function getSchema(): Table
     {
         if (!$this->_tableSchema) {

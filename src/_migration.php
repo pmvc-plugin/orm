@@ -14,6 +14,7 @@ use PMVC\PlugIn\orm\Attrs\Field;
 
 class Migration
 {
+    public $caller;
     private $_recorder;
 
     public function __invoke()
@@ -30,7 +31,7 @@ class Migration
     ) {
         $migrationFolder = \PMVC\realpath($migrationFolder);
         if (!empty($migrationFolder)) {
-            $oSN = $this->get_serial_number($migrationFolder);
+            $oSN = $this->caller->get_serial_number($migrationFolder);
             extract(
                 \PMVC\assign(
                     ['nextFile', 'nextName', 'lastName'],
@@ -55,8 +56,14 @@ class Migration
 
     private function _processEach($files, DAO $dao)
     {
-        $this->getRecorder();
+        $checkApplied = !($dao instanceof StructureDAO);
         foreach ($files as $f) {
+            if ($checkApplied) {
+                $migrationName = pathinfo($f, PATHINFO_FILENAME);
+                if ($this->_isApplied($this->getRecorder(), $migrationName)) {
+                    continue;
+                }
+            }
             $r = \PMVC\l($f, _INIT_CONFIG);
             $class = \PMVC\importClass($r);
             $obj = new $class();
@@ -64,12 +71,18 @@ class Migration
         }
     }
 
+    private function _isApplied($recorder, $migrationName)
+    {
+        $results = $recorder->filter('name', $migrationName)->process();
+        return !empty($results);
+    }
+
     public function getAllFiles($fileOrDir)
     {
         return $this->caller->get_all_files($fileOrDir, '[0-9]*.php');
     }
 
-    public function process($fileOrDir, DAO $oDao = null)
+    public function process($fileOrDir, ?DAO $oDao = null)
     {
         $migrationFiles = $this->getAllFiles($fileOrDir);
         if (is_null($oDao)) {

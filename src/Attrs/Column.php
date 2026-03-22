@@ -9,6 +9,7 @@ use PMVC\PlugIn\orm;
 class Column extends HashMap
 {
     public $name;
+    protected $fieldType;
     protected $baseFieldType;
 
     public function __construct($name, $type, array $columnOptions = [])

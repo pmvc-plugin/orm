@@ -81,6 +81,61 @@ class PgsqlEngine extends Engine
         return $behavior;
     }
 
+    public function introspectSchema()
+    {
+        $oSql = \PMVC\plug('orm')->sql();
+        $sql = <<<'EOF'
+SELECT table_name, column_name, data_type, character_maximum_length,
+       is_nullable, column_default
+FROM information_schema.columns
+WHERE table_schema = 'public'
+ORDER BY table_name, ordinal_position
+EOF;
+        $rows = $oSql->set($sql)->process('all');
+        $schema = [];
+        foreach ($rows as $row) {
+            $tableName = $row['table_name'];
+            if (!isset($schema[$tableName])) {
+                $schema[$tableName] = ['TABLE_NAME' => $tableName, 'OPTION_COLS' => []];
+            }
+            $schema[$tableName]['OPTION_COLS'][$row['column_name']] = [
+                'name' => $row['column_name'],
+                'type' => $row['data_type'],
+                'notNull' => $row['is_nullable'] === 'NO',
+                'default' => $row['column_default'],
+            ];
+        }
+        return $schema;
+    }
+
+    public function getRegexSql(string $col, string $bindKey, bool $caseInsensitive = false): string
+    {
+        $op = $caseInsensitive ? '~*' : '~';
+        return "$col $op $bindKey";
+    }
+
+    public function buildAddColumn(Behavior $behavior)
+    {
+        if (isset($this->columnTypes[$behavior->fieldType])) {
+            $behavior->columnTypeSql = \PMVC\tplArrayReplace(
+                $this->columnTypes[$behavior->fieldType],
+                $behavior->options
+            );
+        }
+        return $behavior;
+    }
+
+    public function buildAlterColumn(Behavior $behavior)
+    {
+        if (isset($this->columnTypes[$behavior->newType])) {
+            $behavior->columnTypeSql = \PMVC\tplArrayReplace(
+                $this->columnTypes[$behavior->newType],
+                $behavior->options
+            );
+        }
+        return $behavior;
+    }
+
     public function checkTableExists(Behavior $behavior)
     {
         $oSql = \PMVC\plug('orm')->sql();

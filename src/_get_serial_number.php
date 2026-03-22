@@ -31,7 +31,7 @@ class SN
           $name = $type.'_'.gmdate("Ymd_hi");
         }
         $nextName = $nextSN.'_'.$name;
-        $nextFile = this->_folder.'/'.$nextSN.'_'.$name.'.php';
+        $nextFile = $this->_folder.'/'.$nextSN.'_'.$name.'.php';
         $lastName = $this->getLastName();
         return compact('nextName', 'nextFile', 'lastName');
     }
@@ -53,9 +53,12 @@ class SN
     public function getLastSN()
     {
         $last = $this->getLastName();
+        if (empty($last)) {
+            return 0;
+        }
         preg_match("/(\d+).*/", $last, $matches);
         $lastSN = \PMVC\get($matches, 1);
-        if (!is_numeric($lastSN)) { 
+        if (!is_numeric($lastSN)) {
           throw new DomainException('Get last sn failed. ['.$last.', '.$lastSN.']');
         } else {
           return (int)$lastSN;

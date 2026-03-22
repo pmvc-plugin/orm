@@ -14,7 +14,7 @@ class Table extends HashMap
 
     private $_dao;
 
-    public function __construct($v = [], Dao $dao = null)
+    public function __construct($v = [], ?Dao $dao = null)
     {
         if (is_string($v)) {
             $v = ['TABLE_NAME' => $v];

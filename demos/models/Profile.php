@@ -8,7 +8,7 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\Profile';
 
 #[Table("profile")] 
 #[Field("id_a", "text")] 
-#[Field("id-b", "int")] 
+#[Field("id_b", "int")]
 class Profile extends BaseSqlModel
 {
 

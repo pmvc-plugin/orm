@@ -11,5 +11,5 @@ $oSN = $orm->get_serial_number(migrationFolder);
 
 
 
-var_dump($oSN->getNextName(), $oSN->getLastFile());
+var_dump($oSN->getNextFileName(), $oSN->getLastName());
 

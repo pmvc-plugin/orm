@@ -22,7 +22,6 @@
   },
   "require-dev": {
     "lulco/phoenix": "*",
-    "ezsql/ezsql": "*",
     "pmvc-plugin/unit": "*",
     "pmvc-plugin/dev": "*"
   },
